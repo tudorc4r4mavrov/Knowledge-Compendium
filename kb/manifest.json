@@ -1,7 +1,7 @@
 {
   "format": "kb-manifest",
   "v": 1,
-  "updated": 1795703865574,
+  "updated": 1795703882778,
   "cats": [
     {
       "id": "u72xn0lcxr",
@@ -9,6 +9,13 @@
       "locked": true,
       "order": 0,
       "file": "cat-u72xn0lcxr.json"
+    },
+    {
+      "id": "4dp3o7x8ah",
+      "name": "Web Apps",
+      "locked": false,
+      "order": 1,
+      "file": "cat-4dp3o7x8ah.json"
     }
   ]
 }
