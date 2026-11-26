@@ -4,57 +4,13 @@
   "id": "4dp3o7x8ah",
   "name": "Web Apps",
   "order": 1,
-  "locked": false,
-  "updated": 1795703920246,
-  "data": {
-    "children": [
-      {
-        "id": "klgd5y62ek",
-        "type": "file",
-        "name": "Dev Tools",
-        "tags": [],
-        "fav": false,
-        "created": 1795703890987,
-        "updated": 1795703920246,
-        "boxes": [
-          {
-            "id": "l2erftfa0d",
-            "kind": "text",
-            "title": "What is it?",
-            "width": "half",
-            "content": "sss"
-          },
-          {
-            "id": "mjc1zrnvhg",
-            "kind": "text",
-            "title": "Types",
-            "width": "half",
-            "content": "sss\nssss"
-          },
-          {
-            "id": "ceb0w0pp3h",
-            "kind": "code",
-            "title": "Code",
-            "width": "full",
-            "lang": "bash",
-            "lines": [
-              {
-                "id": "pvjzoajjd2",
-                "code": "blah blah TARGET",
-                "comment": ""
-              }
-            ]
-          },
-          {
-            "id": "70258gkay8",
-            "kind": "image",
-            "title": "Image",
-            "width": "half",
-            "src": "",
-            "caption": ""
-          }
-        ]
-      }
-    ]
+  "locked": true,
+  "updated": 1795704427948,
+  "enc": {
+    "kdf": "PBKDF2-SHA256",
+    "iter": 600000,
+    "salt": "wLuiQluM+9g1/O+JL8f3rw==",
+    "iv": "hvaKW7gjWSug53Ef",
+    "ct": "+sDD8Awqs9WIqJNFOQ6E3Z3QhbV/GvE7mDw0lhvV5AzzZLBTci7BO06TAln7IiKopnCp6IPxJ2RMlXYrLXqtqbhjuF28uS4tcQmGGGwZTJx6XLtoM0abv9lPTy8SfzlWh7EfUOfZYLkDs8rwO8x/2AEpBFBuA2MxMHheOWmhiR1xa9N/WLH6C64BdeP2ad1zobPz80AmVmoD9Vc9IWIbLVXS/ehSG8aOKQavKBiT691uv9StGqnIrC6iOJKD6vYhqDvb/PQR4m7JP6HnYQcbqrOGsHsYPzfgtMau3aacBBJAAvMJoW9jwX83H+w/N4b0zVGQz6m15LlvbPphLC168+1BG2JzwSPzyC9KzPudnLmAjgz8rPpGnQDaAy6RfYKeRXVWelcvMXyaWzMyhnX/vv9dlS+o015gt77OmJr3hkeGjfuhbjjS0+8w2sQTO/4v8wpFJwoXXOW54nQUlV2im4rqSOYmLyj4EKB43hVpkh1BLv1rT8peHmAHv7WELd6ufA1VL5V18mtCFkI+x1AaUxLUtKpVxRPgH96WHvh9YucQosK2p+ki97yqhDUrimISSHt9li7MeLcWjDldPVpu3ViFh/cggjItbHbxt5Vt/XtYwvRvDP9DohpOz0gDt1BEl/DLk7pVBaeKMcmueQM/q65I+xApCkr/eRwgoLWiMZ4pEzuKdZQ0E6DjBtOfN2PbisGEVp6wyam0ZANHIaw1c2t1mS6sLAGWuVe9VAjqwNge5HQVyh3M0AX3ess="
   }
 }
