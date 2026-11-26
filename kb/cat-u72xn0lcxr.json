@@ -1,0 +1,16 @@
+{
+  "format": "kb-cat",
+  "v": 1,
+  "id": "u72xn0lcxr",
+  "name": "Networking",
+  "order": 0,
+  "locked": true,
+  "updated": 1795703013678,
+  "enc": {
+    "kdf": "PBKDF2-SHA256",
+    "iter": 600000,
+    "salt": "s63Qzz7IZDReRtAJlF626w==",
+    "iv": "3GcYgVIQ7rE6Ig7q",
+    "ct": "8RdRZQZJEcZWapCy5u2+yz1bQrxUNByWybeqeXE0+w=="
+  }
+}

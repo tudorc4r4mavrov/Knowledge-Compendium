@@ -1,0 +1,14 @@
+{
+  "format": "kb-manifest",
+  "v": 1,
+  "updated": 1795703865574,
+  "cats": [
+    {
+      "id": "u72xn0lcxr",
+      "name": "Networking",
+      "locked": true,
+      "order": 0,
+      "file": "cat-u72xn0lcxr.json"
+    }
+  ]
+}
