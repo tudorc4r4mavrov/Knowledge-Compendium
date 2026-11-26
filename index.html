@@ -2,6 +2,8 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data: blob:; connect-src 'self' https://api.github.com; form-action 'none'; base-uri 'none'; object-src 'none'; frame-src 'none'; worker-src 'none'">
+<meta name="referrer" content="no-referrer">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Knowledge Base</title>
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='88'>🗂️</text></svg>">
@@ -414,16 +416,16 @@ figure.img figcaption{text-align:center;color:var(--muted);font-size:12.5px;marg
 <div id="layer"></div>
 <div id="toasts" aria-live="polite"></div>
 
-<script src="https://cdn.jsdelivr.net/npm/marked@12.0.2/marked.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/dompurify@3.1.6/dist/purify.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/powershell.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/dos.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/dockerfile.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/nginx.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/x86asm.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/http.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.15.2/Sortable.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/marked@12.0.2/marked.min.js" integrity="sha384-/TQbtLCAerC3jgaim+N78RZSDYV7ryeoBCVqTuzRrFec2akfBkHS7ACQ3PQhvMVi" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="https://cdn.jsdelivr.net/npm/dompurify@3.1.6/dist/purify.min.js" integrity="sha384-+VfUPEb0PdtChMwmBcBmykRMDd+v6D/oFmB3rZM/puCMDYcIvF968OimRh4KQY9a" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js" integrity="sha384-F/bZzf7p3Joyp5psL90p/p89AZJsndkSoGwRpXcZhleCWhd8SnRuoYo4d0yirjJp" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/powershell.min.js" integrity="sha384-LWJZQx0dgGhEK7snfNYrQs5K+QKD1sOmE02sOQCz4br9UmqSJDvPLoUVFaUyFnjq" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/dos.min.js" integrity="sha384-6+/BHm9a7L7KFZE/myAKBddEjwfPovVtBzDrEu/6VqocfSqvRMyM+Lf3k9n89yGH" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/dockerfile.min.js" integrity="sha384-H3wUmCndJNBOuIIzcLSr2zLLZYs8PYuw6qKyENk7THEnYQJvOMDBu42P9XsJSRKw" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/nginx.min.js" integrity="sha384-p6UV3HZc7zs9wUF6j4Knk3bpx1/JnhlwDoFnKJAOogB1cUi32u31NlnZ2s2dW8IR" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/x86asm.min.js" integrity="sha384-eKsHYF6apOh4wN/zUOnYUx5s4086rCTH2ZG0R09R49HLu6/1Kn/6J7Zn6M8++8On" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/http.min.js" integrity="sha384-wt2eEhJoUmjz8wmTq0k9WvI19Pumi9/h7B87i0wc7QMYwnCJ0dcuyfcYo/ui1M6t" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.15.2/Sortable.min.js" integrity="sha384-BSxuMLxX+FCbTdYec3TbXlnMGEEM2QXTFdtDaveen71o+jswm2J36+xFqp8k4VHM" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 <script>
 'use strict';
 /* =====================================================================
@@ -597,7 +599,7 @@ function normBox(b) {
     b.lines = (Array.isArray(b.lines) ? b.lines : []).map(l => ({ id: l.id || uid(), code: String(l.code ?? ''), comment: String(l.comment ?? '') }));
     if (!b.lines.length) b.lines = [{ id: uid(), code: '', comment: '' }];
   } else if (b.kind === 'image') {
-    b.src = typeof b.src === 'string' && /^(data:image\/|https:\/\/)/.test(b.src) ? b.src : ''; b.caption = String(b.caption ?? '');
+    b.src = typeof b.src === 'string' && /^data:image\/(png|jpe?g|gif|webp|svg\+xml);/i.test(b.src) ? b.src : ''; b.caption = String(b.caption ?? '');
   } else if (b.kind === 'refs') {
     b.items = (Array.isArray(b.items) ? b.items : []).map(i => ({ id: i.id || uid(), title: String(i.title ?? ''), url: String(i.url ?? ''), note: String(i.note ?? '') }));
   } else { b.kind = 'text'; b.content = String(b.content ?? ''); }
@@ -836,8 +838,19 @@ function md(src, catId) {
     return t ? `<a class="wl" href="#/c/${t.c.id}/${t.n.id}">${txt}</a>` : `<a class="wl missing" href="#/go/${encodeURIComponent(name.trim())}" title="No concept with this name yet">${txt}</a>`;
   });
   if (!window.marked || !window.DOMPurify) return `<p>${esc(src).replace(/\n/g, '<br>')}</p>`;
-  return DOMPurify.sanitize(marked.parse(linked, { gfm: true, breaks: true }));
+  return DOMPurify.sanitize(marked.parse(linked, { gfm: true, breaks: true }), PURIFY);
 }
+/* Only plain document formatting is allowed in notes: no styles, forms, media, SVG or external images. */
+const PURIFY = {
+  ALLOWED_TAGS: ['p', 'br', 'hr', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'strong', 'b', 'em', 'i', 'u', 's', 'del', 'ins', 'mark', 'sub', 'sup', 'small', 'kbd', 'code', 'pre', 'blockquote', 'ul', 'ol', 'li', 'dl', 'dt', 'dd', 'table', 'thead', 'tbody', 'tr', 'th', 'td', 'a', 'img', 'span', 'details', 'summary'],
+  ALLOWED_ATTR: ['href', 'title', 'class', 'src', 'alt', 'colspan', 'rowspan', 'align', 'start'],
+  ALLOW_DATA_ATTR: false
+};
+if (window.DOMPurify) DOMPurify.addHook('afterSanitizeAttributes', n => {
+  if (n.tagName === 'IMG' && !/^data:image\/(png|jpe?g|gif|webp);/i.test(n.getAttribute('src') || '')) n.remove();
+  if (n.tagName === 'A') { const h = n.getAttribute('href') || ''; if (!/^(https?:|mailto:|#)/i.test(h)) n.removeAttribute('href'); }
+  if (n.hasAttribute && n.hasAttribute('class') && !/^(wl( missing)?|language-[\w-]+|hljs[\w -]*)$/.test(n.getAttribute('class'))) n.removeAttribute('class');
+});
 function isEmptyBox(b) {
   if (b.kind === 'text') return !b.content.trim();
   if (b.kind === 'code') return !b.lines.some(l => l.code.trim() || l.comment.trim());
