@@ -5,7 +5,7 @@
   "name": "Web Apps",
   "order": 1,
   "locked": false,
-  "updated": 1795703890988,
+  "updated": 1795703920246,
   "data": {
     "children": [
       {
@@ -15,21 +15,21 @@
         "tags": [],
         "fav": false,
         "created": 1795703890987,
-        "updated": 1795703894181,
+        "updated": 1795703920246,
         "boxes": [
           {
             "id": "l2erftfa0d",
             "kind": "text",
             "title": "What is it?",
             "width": "half",
-            "content": ""
+            "content": "sss"
           },
           {
             "id": "mjc1zrnvhg",
             "kind": "text",
             "title": "Types",
             "width": "half",
-            "content": ""
+            "content": "sss\nssss"
           },
           {
             "id": "ceb0w0pp3h",
@@ -40,7 +40,7 @@
             "lines": [
               {
                 "id": "pvjzoajjd2",
-                "code": "",
+                "code": "blah blah TARGET",
                 "comment": ""
               }
             ]
