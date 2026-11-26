@@ -833,13 +833,18 @@ function resolveName(name, preferCat) {
 }
 function md(src, catId) {
   if (!src || !src.trim()) return '';
-  const linked = src.replace(/\[\[([^\]|\n]+)(?:\|([^\]\n]+))?\]\]/g, (m, name, label) => {
+  const links = [];
+  const withMarks = src.replace(/\[\[([^\]|\n]+)(?:\|([^\]\n]+))?\]\]/g, (m, name, label) => {
     const t = resolveName(name.trim(), catId), txt = esc((label || name).trim());
-    return t ? `<a class="wl" href="#/c/${t.c.id}/${t.n.id}">${txt}</a>` : `<a class="wl missing" href="#/go/${encodeURIComponent(name.trim())}" title="No concept with this name yet">${txt}</a>`;
+    links.push(t ? `<a class="wl" href="#/c/${t.c.id}/${t.n.id}">${txt}</a>` : `<a class="wl missing" href="#/go/${encodeURIComponent(name.trim())}" title="No concept with this name yet">${txt}</a>`);
+    return `KBWLX${links.length - 1}X`;
   });
-  if (!window.marked || !window.DOMPurify) return `<p>${esc(src).replace(/\n/g, '<br>')}</p>`;
-  return DOMPurify.sanitize(marked.parse(linked, { gfm: true, breaks: true }), PURIFY);
+  const fill = h => h.replace(/KBWLX(\d+)X/g, (m, i) => links[+i] || m);
+  if (!window.marked || !window.DOMPurify) return `<p>${fill(esc(withMarks).replace(/\n/g, '<br>'))}</p>`;
+  return fill(DOMPurify.sanitize(marked.parse(withMarks, { gfm: true, breaks: true }), PURIFY));
 }
+/* Any HTML typed into a note is shown as literal text, never rendered or run. */
+if (window.marked) marked.use({ renderer: { html(h) { return esc(typeof h === 'object' ? (h.text ?? h.raw) : h); } } });
 /* Only plain document formatting is allowed in notes: no styles, forms, media, SVG or external images. */
 const PURIFY = {
   ALLOWED_TAGS: ['p', 'br', 'hr', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'strong', 'b', 'em', 'i', 'u', 's', 'del', 'ins', 'mark', 'sub', 'sup', 'small', 'kbd', 'code', 'pre', 'blockquote', 'ul', 'ol', 'li', 'dl', 'dt', 'dd', 'table', 'thead', 'tbody', 'tr', 'th', 'td', 'a', 'img', 'span', 'details', 'summary'],
