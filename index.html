@@ -1,0 +1,1759 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Knowledge Base</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='88'>🗂️</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<script>
+  try { var t = JSON.parse(localStorage.getItem('kb.theme')); document.documentElement.dataset.theme = t || (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'); }
+  catch (e) { document.documentElement.dataset.theme = 'light'; }
+</script>
+<style>
+:root{
+  --font:'IBM Plex Sans',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;
+  --mono:'IBM Plex Mono',ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+  --sb:276px;
+}
+:root,[data-theme="light"]{
+  color-scheme:light;
+  --bg:#f3f4f1;--panel:#fcfcfb;--panel2:#eef0ec;--hover:#e8ebe6;--line:#dfe2dc;--line2:#cdd2ca;
+  --text:#1b2330;--muted:#566070;--faint:#8a929d;
+  --accent:#2747c4;--accent-soft:rgba(39,71,196,.09);--on-accent:#fff;
+  --fill:#b86e0a;--fill-soft:rgba(214,138,30,.16);
+  --danger:#b4361c;--danger-soft:rgba(180,54,28,.09);--ok:#2f7d4a;--warn:#b86e0a;
+  --code:#f1f3ef;--code-h:#e7eae4;
+  --pop:0 14px 40px rgba(27,35,48,.16),0 2px 6px rgba(27,35,48,.08);
+  --tk-key:#7a3bc9;--tk-str:#21794a;--tk-com:#8a929d;--tk-num:#b2560b;--tk-fn:#2747c4;--tk-var:#b8326a;
+}
+[data-theme="dark"]{
+  color-scheme:dark;
+  --bg:#12161c;--panel:#171c24;--panel2:#1d232d;--hover:#222a35;--line:#262e3a;--line2:#323c4a;
+  --text:#e3e7ed;--muted:#9ba5b2;--faint:#687382;
+  --accent:#8aa4ff;--accent-soft:rgba(138,164,255,.12);--on-accent:#0d1530;
+  --fill:#f2b35b;--fill-soft:rgba(242,179,91,.14);
+  --danger:#f27a5e;--danger-soft:rgba(242,122,94,.12);--ok:#6fd08f;--warn:#f2b35b;
+  --code:#10141a;--code-h:#1a2029;
+  --pop:0 18px 48px rgba(0,0,0,.55);
+  --tk-key:#c7a6ff;--tk-str:#8fdcae;--tk-com:#687382;--tk-num:#f5b36b;--tk-fn:#8aa4ff;--tk-var:#f29ac0;
+}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{font:14.5px/1.55 var(--font);background:var(--bg);color:var(--text);-webkit-font-smoothing:antialiased}
+a{color:inherit;text-decoration:none}
+button,input,select,textarea{font:inherit;color:inherit}
+button{cursor:pointer;background:none;border:0;padding:0}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:4px}
+kbd{font:500 11px var(--mono);padding:1px 5px;border:1px solid var(--line2);border-bottom-width:2px;border-radius:4px;color:var(--muted);background:var(--panel)}
+.i{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:1.75;stroke-linecap:round;stroke-linejoin:round;flex:none}
+.i.fill{fill:currentColor}
+.i.xl{width:34px;height:34px;stroke-width:1.4}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+
+/* ---------- layout ---------- */
+#app{display:flex;min-height:100vh}
+#sidebar{position:sticky;top:0;height:100vh;width:var(--sb);flex:none;display:flex;flex-direction:column;background:var(--panel);border-right:1px solid var(--line);padding-top:env(safe-area-inset-top,0px)}
+#mainwrap{flex:1;min-width:0;display:flex;flex-direction:column}
+#topbar{position:sticky;top:0;z-index:30;display:flex;align-items:center;gap:10px;flex-wrap:wrap;min-height:56px;padding:9px 24px;padding-top:calc(9px + env(safe-area-inset-top,0px));background:color-mix(in srgb,var(--bg) 90%,transparent);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+main{padding:26px 28px 120px;padding-bottom:calc(120px + env(safe-area-inset-bottom,0px))}
+.page{max-width:1180px;margin:0 auto}
+#scrim{display:none}
+.mobile-only{display:none!important}
+
+/* ---------- sidebar ---------- */
+.sb-top{padding:16px 14px 8px}
+.brand{display:flex;align-items:center;gap:9px;font-weight:600;font-size:15px;padding:4px 6px;margin-bottom:12px}
+.brand .mark{width:26px;height:26px;border-radius:7px;background:var(--text);color:var(--bg);display:grid;place-items:center}
+.brand .mark .i{width:15px;height:15px}
+.sb-search{display:flex;align-items:center;gap:8px;width:100%;padding:7px 10px;border:1px solid var(--line);border-radius:8px;background:var(--bg);color:var(--faint);text-align:left}
+.sb-search span{flex:1}
+.sb-search:hover{border-color:var(--line2);color:var(--muted)}
+.sb-scroll{flex:1;overflow-y:auto;padding:6px 10px 16px;overscroll-behavior:contain}
+.sb-link{display:flex;align-items:center;gap:9px;padding:6px 8px;border-radius:7px;color:var(--muted)}
+.sb-link:hover{background:var(--hover);color:var(--text)}
+.sb-link.active{background:var(--accent-soft);color:var(--accent)}
+.sb-sec{margin-top:16px}
+.sb-sec-h{display:flex;align-items:center;justify-content:space-between;padding:0 8px 4px;color:var(--faint);font-size:12.5px;font-weight:500}
+.sb-cat-row{display:flex;align-items:center;gap:9px;padding:6px 8px;border-radius:7px;color:var(--muted)}
+.sb-cat-row:hover{background:var(--hover);color:var(--text)}
+.sb-cat.active>.sb-cat-row{color:var(--text);font-weight:500}
+.sb-cat-row.current{background:var(--accent-soft);color:var(--accent)!important}
+.sb-cat-row .t,.tlink span{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.cnt{font-size:12px;color:var(--faint);font-variant-numeric:tabular-nums}
+.tl{list-style:none;margin:0;padding:0}
+.sb-cat>.tl{margin:2px 0 6px;min-height:8px}
+.ti .tl:empty{min-height:8px}
+.tr{display:flex;align-items:center;gap:2px;padding:0 4px 0 calc(6px + var(--d,0)*14px);border-radius:6px;color:var(--muted);position:relative}
+.tr:hover{background:var(--hover);color:var(--text)}
+.tr.current{background:var(--accent-soft);color:var(--accent)}
+.tw,.tw-sp{width:20px;height:28px;display:grid;place-items:center;flex:none;color:var(--faint)}
+.tw .i{width:13px;height:13px;transition:transform .15s}
+.tw.open .i{transform:rotate(90deg)}
+.tlink{flex:1;min-width:0;display:flex;align-items:center;gap:7px;padding:4px 0;font-size:13.5px}
+.tlink .i{width:15px;height:15px;opacity:.8}
+.tr .tm{opacity:0}
+.tr:hover .tm,.tr:focus-within .tm{opacity:1}
+.sb-tags{display:flex;flex-wrap:wrap;gap:4px;padding:2px 6px}
+.sb-foot{border-top:1px solid var(--line);padding:10px 12px;padding-bottom:calc(10px + env(safe-area-inset-bottom,0px));display:flex;align-items:center;gap:8px}
+.sb-foot .mode{flex:1;font-size:12.5px;color:var(--faint);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.drag-ghost{opacity:.35}
+
+/* ---------- topbar ---------- */
+.crumbs{flex:1;min-width:0;display:flex;align-items:center;gap:6px;font-size:13.5px;color:var(--muted);overflow:hidden;white-space:nowrap}
+.crumbs a{overflow:hidden;text-overflow:ellipsis;padding:2px 4px;border-radius:5px}
+.crumbs a:hover{color:var(--text);background:var(--hover)}
+.crumbs .cur{color:var(--text);font-weight:500;overflow:hidden;text-overflow:ellipsis}
+.crumbs .sep{color:var(--line2)}
+.top-r{display:flex;align-items:center;gap:6px;margin-left:auto}
+.vars{display:flex;align-items:center;gap:4px;flex-wrap:wrap}
+.var-f{display:flex;align-items:center;border:1px solid var(--line2);border-radius:8px;background:var(--panel);overflow:hidden;height:32px}
+.var-f:focus-within{border-color:var(--fill);box-shadow:0 0 0 3px var(--fill-soft)}
+.var-f span{font:500 12px var(--mono);color:var(--fill);padding:0 8px;height:100%;display:grid;place-items:center;background:var(--fill-soft)}
+.var-f input{border:0;outline:0;background:none;width:150px;padding:0 8px;font:13px var(--mono)}
+.var-f .var-x{width:24px;height:100%;color:var(--faint)}
+.var-f .var-x:hover{color:var(--danger)}
+.status{display:flex;align-items:center;gap:7px;height:32px;padding:0 10px;border-radius:8px;font-size:12.5px;color:var(--muted)}
+.status:hover{background:var(--hover)}
+.status .dot{width:7px;height:7px;border-radius:50%;background:var(--faint)}
+.status.ok .dot{background:var(--ok)}
+.status.warn .dot{background:var(--warn)}
+.status.err{color:var(--danger)} .status.err .dot{background:var(--danger)}
+.status.busy .dot{background:var(--accent);animation:pulse 1s infinite}
+@keyframes pulse{50%{opacity:.3}}
+#banner:empty{display:none}
+.banner{display:flex;align-items:center;gap:10px;margin:14px 28px 0;padding:10px 14px;border:1px solid var(--line);border-radius:9px;background:var(--panel);font-size:13.5px;color:var(--muted)}
+.banner b{color:var(--text);font-weight:500}
+.banner .btn{margin-left:auto}
+
+/* ---------- buttons/inputs ---------- */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:7px;height:34px;padding:0 13px;border:1px solid var(--line2);border-radius:8px;background:var(--panel);font-weight:500;font-size:13.5px;white-space:nowrap}
+.btn:hover{background:var(--hover)}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:var(--on-accent)}
+.btn.primary:hover{filter:brightness(1.08)}
+.btn.danger{color:var(--danger)}
+.btn.danger-solid{background:var(--danger);border-color:var(--danger);color:#fff}
+.btn.sm{height:28px;padding:0 9px;font-size:12.5px}
+.btn:disabled{opacity:.55;cursor:default}
+.ib{width:32px;height:32px;display:inline-grid;place-items:center;border-radius:8px;color:var(--muted);flex:none}
+.ib:hover{background:var(--hover);color:var(--text)}
+.ib.sm{width:26px;height:26px;border-radius:6px}
+.ib.xs{width:22px;height:22px;border-radius:5px}
+.ib.xs .i{width:14px;height:14px}
+.ib.on{color:var(--fill)}
+.ib.danger:hover{color:var(--danger);background:var(--danger-soft)}
+.in{width:100%;height:36px;padding:0 11px;border:1px solid var(--line2);border-radius:8px;background:var(--panel);outline:0}
+.in:focus,.ta:focus{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft)}
+label.f{display:flex;flex-direction:column;gap:5px;font-size:13px;color:var(--muted);font-weight:500}
+.chk{display:flex;align-items:center;gap:8px;font-size:13.5px;color:var(--muted)}
+
+/* ---------- page header ---------- */
+.page-h{display:flex;align-items:flex-start;gap:16px;margin-bottom:22px}
+.ph-l{flex:1;min-width:0}
+.ph-r{display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+h1{font-size:26px;line-height:1.2;font-weight:600;letter-spacing:-.015em;margin:0;overflow-wrap:anywhere}
+.sub{color:var(--muted);margin:6px 0 0;font-size:13.5px}
+.meta{display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin-top:9px;font-size:12.5px;color:var(--faint)}
+.sec-t{font-size:14px;font-weight:600;margin:34px 0 10px;color:var(--muted)}
+
+/* ---------- home ---------- */
+.cat-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:12px}
+.cat-card{display:flex;flex-direction:column;gap:3px;padding:16px;border:1px solid var(--line);border-radius:10px;background:var(--panel);min-height:112px}
+.cat-card:hover{border-color:var(--line2);background:var(--panel2)}
+.cat-card .cc-ic{width:34px;height:34px;border-radius:9px;display:grid;place-items:center;background:var(--panel2);color:var(--muted);margin-bottom:auto}
+.cat-card:hover .cc-ic{background:var(--panel)}
+.cat-card .cc-name{font-weight:600;font-size:15px;margin-top:12px;overflow-wrap:anywhere}
+.cat-card .cc-meta{font-size:12.5px;color:var(--faint)}
+.cat-card.new{border-style:dashed;align-items:center;justify-content:center;color:var(--muted);gap:8px}
+.rows{display:flex;flex-direction:column;border:1px solid var(--line);border-radius:10px;background:var(--panel);overflow:hidden}
+.row{display:flex;align-items:center;gap:10px;padding:9px 14px;border-top:1px solid var(--line)}
+.row:first-child{border-top:0}
+.row:hover{background:var(--panel2)}
+.row .i{color:var(--faint)}
+.row-name{font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.row-path{color:var(--faint);font-size:12.5px;flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.row .tags{display:flex;gap:4px}
+.empty{border:1px dashed var(--line2);border-radius:12px;padding:44px 24px;text-align:center;color:var(--muted)}
+.empty h2{font-size:17px;margin:0 0 6px;color:var(--text);font-weight:600}
+.empty p{margin:0 auto 16px;max-width:440px}
+.empty .acts{display:flex;gap:8px;justify-content:center;flex-wrap:wrap}
+
+/* ---------- folder items ---------- */
+.items{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:10px}
+.item{display:flex;gap:12px;padding:13px 14px;border:1px solid var(--line);border-radius:10px;background:var(--panel);min-width:0}
+.item:hover{border-color:var(--line2);background:var(--panel2)}
+.item-ic{width:32px;height:32px;border-radius:8px;display:grid;place-items:center;flex:none;background:var(--panel2);color:var(--muted)}
+.item-ic.folder{color:var(--accent);background:var(--accent-soft)}
+.item-b{min-width:0;flex:1}
+.item-n{font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.item-d{font-size:12.5px;color:var(--muted);margin-top:2px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.item-m{font-size:12px;color:var(--faint);margin-top:6px;display:flex;flex-wrap:wrap;gap:4px;align-items:center}
+
+/* ---------- tags ---------- */
+.tag{display:inline-flex;align-items:center;gap:4px;height:22px;padding:0 8px;border-radius:11px;background:var(--panel2);border:1px solid var(--line);color:var(--muted);font-size:12px;font-weight:500;white-space:nowrap}
+a.tag:hover{border-color:var(--accent);color:var(--accent)}
+.tag.on{background:var(--accent);border-color:var(--accent);color:var(--on-accent)}
+.tag span{opacity:.65;font-variant-numeric:tabular-nums}
+.tag button{color:inherit;opacity:.6;margin-right:-3px;font-size:14px;line-height:1}
+.tag button:hover{opacity:1;color:var(--danger)}
+.tag-cloud{display:flex;flex-wrap:wrap;gap:6px}
+.tags-ed{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin-top:10px}
+.tag-in{border:0;outline:0;background:none;min-width:140px;height:24px;font-size:13px}
+.tag-in::-webkit-calendar-picker-indicator{display:none!important}
+
+/* ---------- boxes ---------- */
+.boxes{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;align-items:stretch}
+.box{display:flex;flex-direction:column;min-width:0;border:1px solid var(--line);border-radius:10px;background:var(--panel)}
+.box.full{grid-column:1/-1}
+.box-h{display:flex;align-items:center;gap:8px;padding:10px 14px 0;color:var(--muted)}
+.box-h h3{margin:0;font-size:13.5px;font-weight:600;color:var(--text);flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.box-h>.i{width:15px;height:15px;color:var(--faint)}
+.box-h .lang{font:12px var(--mono);color:var(--faint)}
+.box-b{padding:10px 14px 14px;flex:1;min-width:0}
+
+/* markdown */
+.md{overflow-wrap:anywhere}
+.md>:first-child{margin-top:0}.md>:last-child{margin-bottom:0}
+.md p,.md ul,.md ol,.md pre,.md table,.md blockquote{margin:0 0 .7em}
+.md ul,.md ol{padding-left:1.3em}
+.md li{margin:.15em 0}
+.md h1,.md h2,.md h3,.md h4{font-size:14.5px;margin:1em 0 .4em;font-weight:600}
+.md a{color:var(--accent);text-decoration:underline;text-decoration-color:color-mix(in srgb,var(--accent) 35%,transparent);text-underline-offset:2px}
+.md a.wl{text-decoration:none;background:var(--accent-soft);padding:0 4px;border-radius:4px}
+.md a.wl.missing{color:var(--faint);background:none;text-decoration:underline dashed}
+.md code{font:12.5px var(--mono);background:var(--code);border:1px solid var(--line);padding:1px 4px;border-radius:4px}
+.md pre{background:var(--code);border:1px solid var(--line);border-radius:8px;padding:10px 12px;overflow-x:auto}
+.md pre code{border:0;padding:0;background:none}
+.md table{border-collapse:collapse;display:block;overflow-x:auto;font-size:13.5px}
+.md th,.md td{border:1px solid var(--line);padding:5px 9px;text-align:left}
+.md th{background:var(--panel2);font-weight:600}
+.md blockquote{border-left:3px solid var(--line2);padding-left:12px;color:var(--muted)}
+.md hr{border:0;border-top:1px solid var(--line)}
+
+/* code lines (view) */
+.code-lines{display:flex;flex-direction:column;gap:6px}
+.cl{position:relative;border-radius:7px;background:var(--code);border:1px solid var(--line);cursor:pointer;transition:border-color .12s,background .12s}
+.cl:hover{border-color:var(--accent);background:var(--code-h)}
+.cl pre{margin:0;padding:8px 44px 8px 12px;font:13px/1.6 var(--mono);white-space:pre-wrap;word-break:break-word}
+.cl .copy{position:absolute;top:5px;right:5px;width:28px;height:28px;border-radius:6px;display:grid;place-items:center;color:var(--faint)}
+.cl:hover .copy{color:var(--accent);background:var(--accent-soft)}
+.cl.copied{border-color:var(--ok)}
+.cl.copied .copy{color:var(--ok)}
+.cl-c{padding:0 12px 7px;font-size:12.5px;color:var(--muted);margin-top:-3px}
+.cl-c::before{content:'# ';font-family:var(--mono);color:var(--faint)}
+.cl.only-c{background:none;border-color:transparent;cursor:default}
+.cl.only-c .cl-c{padding:4px 2px 0;margin:0;font-weight:500;color:var(--text)}
+.cl.only-c .cl-c::before{content:none}
+.var{color:var(--fill);background:var(--fill-soft);border-radius:4px;padding:0 3px;font-weight:500}
+.var.empty{background:none;outline:1px dashed var(--fill);outline-offset:-1px}
+.hljs-keyword,.hljs-selector-tag,.hljs-built_in,.hljs-type,.hljs-doctag{color:var(--tk-key)}
+.hljs-string,.hljs-regexp,.hljs-addition,.hljs-char{color:var(--tk-str)}
+.hljs-comment,.hljs-quote{color:var(--tk-com);font-style:italic}
+.hljs-number,.hljs-literal,.hljs-symbol,.hljs-bullet,.hljs-meta{color:var(--tk-num)}
+.hljs-title,.hljs-section,.hljs-name,.hljs-selector-id,.hljs-selector-class{color:var(--tk-fn)}
+.hljs-variable,.hljs-template-variable,.hljs-attr,.hljs-attribute,.hljs-params,.hljs-property,.hljs-subst{color:var(--tk-var)}
+.hljs-deletion{color:var(--danger)}
+
+/* image + refs */
+figure.img{margin:0}
+figure.img img{display:block;max-width:100%;max-height:520px;margin:0 auto;border-radius:7px;border:1px solid var(--line);cursor:zoom-in;background:var(--panel2)}
+figure.img figcaption{text-align:center;color:var(--muted);font-size:12.5px;margin-top:8px}
+.refs{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:2px}
+.refs li{display:flex;gap:9px;padding:6px 8px;border-radius:7px;align-items:flex-start}
+.refs li:hover{background:var(--panel2)}
+.refs .i{margin-top:3px;color:var(--faint)}
+.refs a{color:var(--accent);font-weight:500}
+.refs .host{color:var(--faint);font-size:12px;margin-left:6px}
+.refs .note{color:var(--muted);font-size:12.5px}
+.backlinks{margin-top:26px;display:flex;flex-wrap:wrap;gap:6px;align-items:center;font-size:13px;color:var(--faint)}
+.backlinks a{display:inline-flex;align-items:center;gap:5px;padding:3px 9px;border:1px solid var(--line);border-radius:7px;color:var(--muted);background:var(--panel)}
+.backlinks a:hover{color:var(--accent);border-color:var(--accent)}
+
+/* ---------- edit mode ---------- */
+.title-in{width:100%;border:0;outline:0;background:none;font-size:26px;font-weight:600;letter-spacing:-.015em;padding:2px 0;border-bottom:1px dashed var(--line2)}
+.title-in:focus{border-bottom-color:var(--accent)}
+.box.editing{border-style:dashed;border-color:var(--line2)}
+.box.editing:focus-within{border-style:solid;border-color:var(--accent)}
+.box.editing .box-h{padding:8px 8px 0 6px;gap:4px}
+.grip{width:24px;height:26px;display:grid;place-items:center;color:var(--faint);cursor:grab;flex:none;touch-action:none}
+.grip:hover{color:var(--text)}
+.box-title{flex:1;min-width:0;border:0;outline:0;background:none;font-weight:600;font-size:13.5px;padding:3px 4px;border-radius:5px}
+.box-title:focus{background:var(--panel2)}
+.lang-sel{height:26px;border:1px solid var(--line);border-radius:6px;background:var(--panel);font:12px var(--mono);color:var(--muted);padding:0 4px;max-width:130px}
+.md-tools{display:flex;gap:2px;margin-bottom:6px}
+.tb{height:26px;min-width:28px;padding:0 6px;border-radius:5px;color:var(--muted);font-size:13px;display:inline-grid;place-items:center}
+.tb:hover{background:var(--hover);color:var(--text)}
+.tb code{font-family:var(--mono);font-size:12px}
+.ta{width:100%;min-height:130px;resize:vertical;border:1px solid var(--line);border-radius:8px;background:var(--bg);padding:9px 11px;outline:0;line-height:1.55;overflow:hidden}
+.ed-lines{display:flex;flex-direction:column;gap:6px}
+.ed-line{display:flex;align-items:flex-start;gap:2px}
+.ed-line .grip{height:34px}
+.ed-line-f{flex:1;min-width:0;border:1px solid var(--line);border-radius:7px;background:var(--code);overflow:hidden}
+.ed-line-f:focus-within{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft)}
+.code-in{display:block;width:100%;border:0;outline:0;background:none;resize:none;font:13px/1.6 var(--mono);padding:7px 10px;overflow:hidden;min-height:34px}
+.cmt-in{display:block;width:100%;border:0;border-top:1px dashed var(--line);outline:0;background:none;font-size:12.5px;padding:4px 10px;color:var(--muted)}
+.ed-line .ib{margin-top:4px}
+.add-line{display:flex;align-items:center;justify-content:center;gap:6px;width:100%;margin-top:8px;height:32px;border:1px dashed var(--line2);border-radius:7px;color:var(--muted);font-size:13px}
+.add-line:hover{border-color:var(--accent);color:var(--accent);background:var(--accent-soft)}
+.drop{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;min-height:150px;border:1.5px dashed var(--line2);border-radius:8px;color:var(--muted);cursor:pointer;text-align:center;padding:16px;font-size:13.5px}
+.drop:hover,.drop.over{border-color:var(--accent);color:var(--accent);background:var(--accent-soft)}
+.drop .i{width:26px;height:26px}
+.img-acts{display:flex;gap:6px;justify-content:center;margin:10px 0}
+.ref-ed{display:flex;flex-direction:column;gap:8px}
+.ref-row{display:grid;grid-template-columns:1fr 1.3fr auto;gap:6px;align-items:center}
+.ref-row .in{height:32px;font-size:13px}
+.ref-row .note-in{grid-column:1/3}
+.add-box{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-top:16px;padding:12px;border:1px dashed var(--line2);border-radius:10px;color:var(--muted);font-size:13px}
+.add-box>span{margin-right:4px}
+.hint{color:var(--faint);font-size:12.5px;margin-top:12px}
+.hint code{font-family:var(--mono)}
+.dock{position:fixed;left:50%;bottom:calc(18px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);z-index:40;display:flex;align-items:center;gap:8px;padding:7px 7px 7px 14px;border:1px solid var(--line2);border-radius:12px;background:var(--panel);box-shadow:var(--pop);font-size:13px;color:var(--muted)}
+.dock .lbl{display:flex;align-items:center;gap:6px;margin-right:6px}
+
+/* ---------- unlock ---------- */
+.center{display:grid;place-items:center;min-height:60vh}
+.lock-card{width:min(380px,100%);text-align:center;padding:34px 28px;border:1px solid var(--line);border-radius:14px;background:var(--panel)}
+.lock-card .i.xl{color:var(--fill)}
+.lock-card h1{font-size:22px;margin-top:12px}
+.unlock-f{display:flex;gap:8px;margin-top:20px}
+.unlock-f .in{text-align:center;letter-spacing:.3em;font-family:var(--mono)}
+
+/* ---------- overlays ---------- */
+.modal-bg{position:fixed;inset:0;z-index:100;background:rgba(10,14,20,.45);display:flex;align-items:flex-start;justify-content:center;padding:9vh 16px 16px;overflow-y:auto}
+.modal{width:min(480px,100%);background:var(--panel);border:1px solid var(--line);border-radius:14px;box-shadow:var(--pop);padding:22px}
+.modal.wide{width:min(980px,100%)}
+.modal h2{margin:0 0 14px;font-size:17px;font-weight:600}
+.m-body{display:flex;flex-direction:column;gap:12px}
+.m-body p{margin:0;color:var(--muted)}
+.m-sub{font-size:13.5px;font-weight:600;margin:8px 0 0}
+.m-err{color:var(--danger);font-size:13px;margin:10px 0 0}
+.m-acts{display:flex;justify-content:flex-end;gap:8px;margin-top:20px;flex-wrap:wrap}
+.note{font-size:12.5px;color:var(--faint);margin:0}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.help{font-size:13px;color:var(--muted);border:1px solid var(--line);border-radius:8px;padding:8px 12px}
+.help summary{cursor:pointer;font-weight:500;color:var(--text)}
+.help ol{margin:8px 0 2px;padding-left:18px}
+.help a{color:var(--accent);text-decoration:underline}
+.row-btns{display:flex;gap:8px;flex-wrap:wrap}
+.palette{width:min(640px,100%);background:var(--panel);border:1px solid var(--line);border-radius:14px;box-shadow:var(--pop);overflow:hidden}
+.pal-in{display:flex;align-items:center;gap:10px;padding:0 16px;border-bottom:1px solid var(--line);color:var(--faint)}
+.pal-in input{flex:1;height:54px;border:0;outline:0;background:none;font-size:16px;color:var(--text)}
+.pal-res{max-height:min(60vh,520px);overflow-y:auto;padding:6px}
+.pal-item{display:flex;gap:11px;padding:9px 11px;border-radius:8px;align-items:flex-start;cursor:pointer}
+.pal-item.sel{background:var(--accent-soft)}
+.pal-item>.i{margin-top:3px;color:var(--faint)}
+.pal-item.sel>.i{color:var(--accent)}
+.pi-b{min-width:0;flex:1}
+.pi-name{font-weight:500}
+.pi-path{font-size:12px;color:var(--faint)}
+.pi-snip{font-size:12.5px;color:var(--muted);margin-top:3px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.pal-item mark{background:var(--fill-soft);color:inherit;border-radius:3px;padding:0 1px}
+.pal-empty{padding:26px;text-align:center;color:var(--faint);font-size:13.5px}
+.pal-foot{display:flex;justify-content:space-between;gap:10px;padding:8px 14px;border-top:1px solid var(--line);font-size:12px;color:var(--faint)}
+.menu{position:fixed;z-index:120;min-width:200px;padding:5px;background:var(--panel);border:1px solid var(--line);border-radius:10px;box-shadow:var(--pop)}
+.menu button{display:flex;align-items:center;gap:9px;width:100%;padding:7px 10px;border-radius:6px;text-align:left;font-size:13.5px}
+.menu button:hover{background:var(--hover)}
+.menu button .i{color:var(--faint)}
+.menu button.danger{color:var(--danger)} .menu button.danger .i{color:var(--danger)}
+.menu hr{border:0;border-top:1px solid var(--line);margin:4px 0}
+.lightbox{position:fixed;inset:0;z-index:150;background:rgba(5,8,12,.86);display:grid;place-items:center;padding:24px;cursor:zoom-out}
+.lightbox img{max-width:100%;max-height:100%;border-radius:6px}
+#toasts{position:fixed;z-index:200;left:50%;transform:translateX(-50%);bottom:calc(84px + env(safe-area-inset-bottom,0px));display:flex;flex-direction:column;gap:6px;align-items:center;pointer-events:none}
+.toast{padding:8px 14px;border-radius:9px;background:var(--text);color:var(--bg);font-size:13px;font-weight:500;box-shadow:var(--pop);animation:tin .18s ease-out}
+.toast.err{background:var(--danger);color:#fff}
+@keyframes tin{from{opacity:0;transform:translateY(6px)}}
+.hist{display:grid;grid-template-columns:280px 1fr;gap:16px;min-height:360px}
+.hist-list{border:1px solid var(--line);border-radius:9px;overflow-y:auto;max-height:60vh}
+.hist-item{display:block;width:100%;text-align:left;padding:9px 12px;border-top:1px solid var(--line)}
+.hist-item:first-child{border-top:0}
+.hist-item:hover{background:var(--panel2)}
+.hist-item.sel{background:var(--accent-soft)}
+.hist-item .d{font-size:12px;color:var(--faint)}
+.hist-item .m{font-size:13px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.hist-prev{border:1px solid var(--line);border-radius:9px;padding:14px;overflow-y:auto;max-height:60vh;background:var(--bg)}
+.hist-prev .boxes{grid-template-columns:1fr}
+.hist-acts{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px}
+
+/* ---------- responsive ---------- */
+@media (max-width:900px){
+  .mobile-only{display:inline-grid!important}
+  #sidebar{position:fixed;left:0;top:0;bottom:0;z-index:60;transform:translateX(-102%);transition:transform .2s ease;box-shadow:var(--pop)}
+  body.sb-open #sidebar{transform:none}
+  body.sb-open #scrim{display:block;position:fixed;inset:0;z-index:55;background:rgba(10,14,20,.4)}
+  #topbar{padding:8px 14px;padding-top:calc(8px + env(safe-area-inset-top,0px))}
+  .top-r{width:100%;justify-content:flex-end}
+  .vars{margin-right:auto}
+  .var-f input{width:120px}
+  main{padding:18px 14px 120px}
+  .banner{margin:12px 14px 0}
+  .boxes{grid-template-columns:minmax(0,1fr)}
+  .page-h{flex-direction:column}
+  h1,.title-in{font-size:22px}
+  .hist{grid-template-columns:1fr}
+  .grid2{grid-template-columns:1fr}
+  .ref-row{grid-template-columns:1fr auto}
+  .ref-row .note-in{grid-column:1/2}
+  .tr .tm{opacity:1}
+  .cl .copy{color:var(--accent)}
+  .status .lbl{display:none}
+}
+</style>
+</head>
+<body>
+<div id="app">
+  <aside id="sidebar" aria-label="Navigation"></aside>
+  <div id="scrim" data-act="close-sidebar"></div>
+  <div id="mainwrap">
+    <header id="topbar"></header>
+    <div id="banner"></div>
+    <main id="main"><div class="page"><p class="sub">Loading…</p></div></main>
+  </div>
+</div>
+<div id="layer"></div>
+<div id="toasts" aria-live="polite"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/marked@12.0.2/marked.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/dompurify@3.1.6/dist/purify.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/powershell.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/dos.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/dockerfile.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/nginx.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/x86asm.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/http.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.15.2/Sortable.min.js"></script>
+<script>
+'use strict';
+/* =====================================================================
+   Knowledge Base — single-file app for GitHub Pages
+   Data: one JSON file per category in <repo>/<folder>/cat-<id>.json,
+   committed through the GitHub API. Locked categories are AES-GCM
+   encrypted with a key derived from the PIN (PBKDF2-SHA256).
+   ===================================================================== */
+
+const PBKDF2_ITER = 600000;
+const AUTOLOCK_MS = 15 * 60 * 1000;
+const TE = new TextEncoder(), TD = new TextDecoder();
+
+/* ---------- small utils ---------- */
+const $ = (s, r = document) => r.querySelector(s);
+const $$ = (s, r = document) => [...r.querySelectorAll(s)];
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+const uid = () => [...crypto.getRandomValues(new Uint8Array(10))].map(b => 'abcdefghijklmnopqrstuvwxyz0123456789'[b % 36]).join('');
+const debounce = (fn, ms) => { let t; return (...a) => { clearTimeout(t); t = setTimeout(() => fn(...a), ms); }; };
+const clone = o => JSON.parse(JSON.stringify(o));
+const sleep = ms => new Promise(r => setTimeout(r, ms));
+const reEsc = s => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+function bufToB64(buf) { const b = new Uint8Array(buf); let s = ''; for (let i = 0; i < b.length; i += 0x8000) s += String.fromCharCode.apply(null, b.subarray(i, i + 0x8000)); return btoa(s); }
+function b64ToBuf(s) { const bin = atob(String(s).replace(/\s/g, '')); const out = new Uint8Array(bin.length); for (let i = 0; i < bin.length; i++) out[i] = bin.charCodeAt(i); return out; }
+function relTime(ts) {
+  if (!ts) return '';
+  const s = (Date.now() - ts) / 1000;
+  if (s < 60) return 'just now';
+  if (s < 3600) return Math.floor(s / 60) + ' min ago';
+  if (s < 86400) return Math.floor(s / 3600) + ' h ago';
+  if (s < 86400 * 7) return Math.floor(s / 86400) + ' d ago';
+  return new Date(ts).toLocaleDateString();
+}
+const plural = (n, a, b) => `${n} ${n === 1 ? a : b}`;
+
+const LS = {
+  get(k, d) { try { const v = localStorage.getItem('kb.' + k); return v == null ? d : JSON.parse(v); } catch { return d; } },
+  set(k, v) { try { localStorage.setItem('kb.' + k, JSON.stringify(v)); } catch { } },
+  del(k) { try { localStorage.removeItem('kb.' + k); } catch { } }
+};
+function getToken() { try { return localStorage.getItem('kb.token') || sessionStorage.getItem('kb.token') || ''; } catch { return ''; } }
+function saveToken(t, remember) {
+  try { localStorage.removeItem('kb.token'); sessionStorage.removeItem('kb.token'); if (t) (remember ? localStorage : sessionStorage).setItem('kb.token', t); } catch { }
+}
+
+/* IndexedDB key/value cache (falls back to memory) */
+const IDB = (() => {
+  let dbp; const mem = {};
+  const db = () => dbp || (dbp = new Promise((res, rej) => {
+    const r = indexedDB.open('kb-store', 1);
+    r.onupgradeneeded = () => r.result.createObjectStore('kv');
+    r.onsuccess = () => res(r.result); r.onerror = () => rej(r.error);
+  }));
+  const tx = async (mode, fn) => { const d = await db(); return new Promise((res, rej) => { const q = fn(d.transaction('kv', mode).objectStore('kv')); q.onsuccess = () => res(q.result); q.onerror = () => rej(q.error); }); };
+  return {
+    async get(k) { try { return await tx('readonly', s => s.get(k)); } catch { return mem[k]; } },
+    async set(k, v) { try { await tx('readwrite', s => s.put(v, k)); } catch { mem[k] = v; } }
+  };
+})();
+
+/* ---------- icons ---------- */
+const ICONS = {
+  search: '<circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/>',
+  plus: '<path d="M12 5v14M5 12h14"/>',
+  x: '<path d="M18 6 6 18M6 6l12 12"/>',
+  folder: '<path d="M3 7.5A2.5 2.5 0 0 1 5.5 5H9l2 2.2h7.5A2.5 2.5 0 0 1 21 9.7v7.8a2.5 2.5 0 0 1-2.5 2.5h-13A2.5 2.5 0 0 1 3 17.5z"/>',
+  file: '<path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5M9 13h6M9 17h4"/>',
+  lock: '<rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/>',
+  unlock: '<rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 7.6-1.7"/>',
+  edit: '<path d="M4 20h4L19 9a2.1 2.1 0 0 0-4-4L4 16z"/><path d="m13.5 6.5 4 4"/>',
+  trash: '<path d="M4 7h16M10 11v6M14 11v6M6 7l1 12a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2l1-12M9 7V5a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/>',
+  copy: '<rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V6a2 2 0 0 1 2-2h8"/>',
+  check: '<path d="m5 12 5 5L20 7"/>',
+  chev: '<path d="m9 6 6 6-6 6"/>',
+  grip: '<path d="M9 6h.01M9 12h.01M9 18h.01M15 6h.01M15 12h.01M15 18h.01" stroke-width="3"/>',
+  star: '<path d="m12 3 2.8 5.7 6.2.9-4.5 4.4 1.1 6.2L12 17.3l-5.6 2.9 1.1-6.2L3 9.6l6.2-.9z"/>',
+  history: '<path d="M3 12a9 9 0 1 0 2.6-6.4L3 8"/><path d="M3 3v5h5M12 7v5l3 2"/>',
+  settings: '<path d="M4 6h9M17 6h3M4 12h3M11 12h9M4 18h11M19 18h1"/><circle cx="15" cy="6" r="2"/><circle cx="9" cy="12" r="2"/><circle cx="17" cy="18" r="2"/>',
+  sun: '<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/>',
+  moon: '<path d="M20 14.5A8 8 0 1 1 9.5 4a6.5 6.5 0 0 0 10.5 10.5z"/>',
+  more: '<path d="M5 12h.01M12 12h.01M19 12h.01" stroke-width="3"/>',
+  image: '<rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="9" cy="10" r="2"/><path d="m21 16-5-5L5 20"/>',
+  code: '<path d="m8 8-4 4 4 4M16 8l4 4-4 4M13.5 5l-3 14"/>',
+  text: '<path d="M4 6h16M4 12h16M4 18h10"/>',
+  link: '<path d="M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1"/><path d="M14 10a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1-1"/>',
+  tag: '<path d="M3 12V4h8l10 10-8 8z"/><circle cx="7.5" cy="7.5" r="1.2"/>',
+  home: '<path d="M3 11 12 3l9 8M5 9.5V20h14V9.5"/>',
+  menu: '<path d="M4 6h16M4 12h16M4 18h16"/>',
+  sync: '<path d="M20 11a8 8 0 0 0-14.9-3M4 4v4h4M4 13a8 8 0 0 0 14.9 3M20 20v-4h-4"/>',
+  upload: '<path d="M12 16V4M7 9l5-5 5 5M4 20h16"/>',
+  download: '<path d="M12 4v12M7 11l5 5 5-5M4 20h16"/>',
+  book: '<path d="M5 4h11a3 3 0 0 1 3 3v13H8a3 3 0 0 1-3-3z"/><path d="M5 17a3 3 0 0 1 3-3h11"/>',
+  ext: '<path d="M14 4h6v6M20 4l-9 9M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"/>',
+  wfull: '<rect x="3" y="6" width="18" height="12" rx="2"/>',
+  whalf: '<rect x="3" y="6" width="18" height="12" rx="2"/><path d="M12 6v12"/>',
+  layers: '<path d="m12 3 9 5-9 5-9-5z"/><path d="m3 13 9 5 9-5"/>',
+  box: '<path d="M21 8 12 3 3 8v8l9 5 9-5z"/><path d="m3 8 9 5 9-5M12 13v8"/>',
+  dup: '<rect x="8" y="8" width="12" height="12" rx="2"/><path d="M16 8V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2"/>',
+  key: '<circle cx="8" cy="15" r="4"/><path d="m11 12 9-9M17 6l3 3"/>',
+  dot: ''
+};
+const ic = (n, cls = '') => `<svg class="i ${cls}" viewBox="0 0 24 24" aria-hidden="true">${ICONS[n] || ''}</svg>`;
+
+const LANGS = [['plaintext', 'Plain text'], ['bash', 'Bash / Shell'], ['powershell', 'PowerShell'], ['dos', 'CMD / Batch'], ['python', 'Python'], ['javascript', 'JavaScript'], ['typescript', 'TypeScript'], ['sql', 'SQL'], ['c', 'C'], ['cpp', 'C++'], ['csharp', 'C#'], ['java', 'Java'], ['go', 'Go'], ['rust', 'Rust'], ['php', 'PHP'], ['ruby', 'Ruby'], ['x86asm', 'Assembly x86'], ['yaml', 'YAML'], ['json', 'JSON'], ['xml', 'HTML / XML'], ['css', 'CSS'], ['dockerfile', 'Dockerfile'], ['nginx', 'Nginx'], ['ini', 'INI / config'], ['http', 'HTTP'], ['markdown', 'Markdown']];
+const langLabel = l => (LANGS.find(x => x[0] === l) || [l, l])[1];
+
+/* ---------- state ---------- */
+function guessCfg() {
+  const h = location.hostname; let owner = '', repo = '';
+  if (h.endsWith('.github.io')) { owner = h.split('.')[0]; const seg = location.pathname.split('/').filter(Boolean)[0]; repo = seg && !seg.includes('.') ? seg : h; }
+  return { owner, repo, branch: 'main', path: 'kb' };
+}
+const S = {
+  mode: 'local',                       // 'github' | 'readonly' | 'local'
+  cfg: { ...guessCfg(), ...LS.get('settings', {}) },
+  token: getToken(),
+  cats: [],
+  deleted: new Set(),                  // repo paths to delete on next push
+  base: null, shas: {},                // last synced commit + blob shas per category file
+  status: 'local', statusMsg: '',
+  editing: null,
+  expanded: new Set(LS.get('expanded', [])),
+  msgs: new Set(),
+  pushing: false, pushAgain: false, retries: 0,
+  route: { view: 'home' },
+  loaded: false,
+  lastActivity: Date.now()
+};
+const canEdit = () => S.mode !== 'readonly';
+const dataPath = () => (S.cfg.path || 'kb').replace(/^\/+|\/+$/g, '');
+const catPath = id => `${dataPath()}/cat-${id}.json`;
+const idFromPath = p => (p.match(/cat-([\w-]+)\.json$/) || [])[1];
+const repoKey = () => `${S.cfg.owner}/${S.cfg.repo}@${S.cfg.branch}:${dataPath()}`;
+const catById = id => S.cats.find(c => c.id === id);
+const sortedCats = () => [...S.cats].sort((a, b) => (a.order ?? 0) - (b.order ?? 0) || a.name.localeCompare(b.name));
+const allUnlocked = () => sortedCats().filter(c => c.data);
+const saveExpanded = () => LS.set('expanded', [...S.expanded]);
+
+/* ---------- data model ---------- */
+function walk(nodes, fn, parents = []) {
+  for (const n of nodes) {
+    if (fn(n, parents) === false) return false;
+    if (n.type === 'folder' && walk(n.children, fn, [...parents, n]) === false) return false;
+  }
+}
+function findNode(c, id) {
+  if (!c?.data || !id) return null; let res = null;
+  walk(c.data.children, (n, parents) => { if (n.id === id) { res = { node: n, parents }; return false; } });
+  return res;
+}
+const listOf = (c, parentId) => (!parentId || parentId === 'root') ? c.data.children : findNode(c, parentId)?.node.children;
+function countFiles(nodes) { let n = 0; walk(nodes, x => { if (x.type === 'file') n++; }); return n; }
+function countFolders(nodes) { let n = 0; walk(nodes, x => { if (x.type === 'folder') n++; }); return n; }
+
+const BOX_DEFAULT_TITLE = { text: 'Notes', code: 'Code', image: 'Image', refs: 'References' };
+function newBox(kind, title, width) {
+  const b = { id: uid(), kind, title: title ?? BOX_DEFAULT_TITLE[kind], width: width || (kind === 'code' ? 'full' : 'half') };
+  if (kind === 'text') b.content = '';
+  if (kind === 'code') { b.lang = 'bash'; b.lines = [{ id: uid(), code: '', comment: '' }]; }
+  if (kind === 'image') { b.src = ''; b.caption = ''; }
+  if (kind === 'refs') b.items = [{ id: uid(), title: '', url: '', note: '' }];
+  return b;
+}
+const newFile = name => ({ id: uid(), type: 'file', name, tags: [], fav: false, created: Date.now(), updated: Date.now(), boxes: [newBox('text', 'What is it?'), newBox('text', 'Types'), newBox('code', 'Code'), newBox('image', 'Image')] });
+const newFolder = name => ({ id: uid(), type: 'folder', name, children: [] });
+
+function normBox(b) {
+  b.id = b.id || uid(); b.title = String(b.title ?? ''); b.width = b.width === 'full' ? 'full' : 'half';
+  if (b.kind === 'code') {
+    b.lang = b.lang || 'plaintext';
+    b.lines = (Array.isArray(b.lines) ? b.lines : []).map(l => ({ id: l.id || uid(), code: String(l.code ?? ''), comment: String(l.comment ?? '') }));
+    if (!b.lines.length) b.lines = [{ id: uid(), code: '', comment: '' }];
+  } else if (b.kind === 'image') {
+    b.src = typeof b.src === 'string' && /^(data:image\/|https:\/\/)/.test(b.src) ? b.src : ''; b.caption = String(b.caption ?? '');
+  } else if (b.kind === 'refs') {
+    b.items = (Array.isArray(b.items) ? b.items : []).map(i => ({ id: i.id || uid(), title: String(i.title ?? ''), url: String(i.url ?? ''), note: String(i.note ?? '') }));
+  } else { b.kind = 'text'; b.content = String(b.content ?? ''); }
+  return b;
+}
+function normNodes(arr) {
+  return (Array.isArray(arr) ? arr : []).filter(n => n && typeof n === 'object').map(n => {
+    n.id = n.id || uid(); n.name = String(n.name ?? 'Untitled');
+    if (n.type === 'folder') n.children = normNodes(n.children);
+    else { n.type = 'file'; n.tags = Array.isArray(n.tags) ? n.tags.map(String) : []; n.boxes = (Array.isArray(n.boxes) ? n.boxes : []).filter(b => b && typeof b === 'object').map(normBox); }
+    return n;
+  });
+}
+const normData = d => ({ children: normNodes(d && d.children) });
+
+/* ---------- crypto ---------- */
+async function deriveKey(pin, salt, iter) {
+  const base = await crypto.subtle.importKey('raw', TE.encode(pin), 'PBKDF2', false, ['deriveKey']);
+  return crypto.subtle.deriveKey({ name: 'PBKDF2', salt, iterations: iter, hash: 'SHA-256' }, base, { name: 'AES-GCM', length: 256 }, false, ['encrypt', 'decrypt']);
+}
+async function encryptJSON(obj, key, salt, iter) {
+  const iv = crypto.getRandomValues(new Uint8Array(12));
+  const ct = await crypto.subtle.encrypt({ name: 'AES-GCM', iv }, key, TE.encode(JSON.stringify(obj)));
+  return { kdf: 'PBKDF2-SHA256', iter, salt: bufToB64(salt), iv: bufToB64(iv), ct: bufToB64(ct) };
+}
+async function decryptJSON(env, key) {
+  const pt = await crypto.subtle.decrypt({ name: 'AES-GCM', iv: b64ToBuf(env.iv) }, key, b64ToBuf(env.ct));
+  return JSON.parse(TD.decode(pt));
+}
+async function keyFromEnv(env, pin) { const salt = b64ToBuf(env.salt); return { key: await deriveKey(pin, salt, env.iter), salt, iter: env.iter }; }
+
+/* ---------- (de)serialization ---------- */
+async function serializeCat(c) {
+  const head = { format: 'kb-cat', v: 1, id: c.id, name: c.name, order: c.order ?? 0, locked: !!c.locked, updated: c.updated || Date.now() };
+  if (!c.locked) return { ...head, data: c.data || { children: [] } };
+  if (c.data && c.key) c.enc = await encryptJSON(c.data, c.key, c.salt, c.iter);
+  return { ...head, enc: c.enc };
+}
+function parseCat(o) {
+  if (!o || o.format !== 'kb-cat' || !o.id) throw new Error('Not a category file');
+  return { id: String(o.id), name: String(o.name || 'Untitled'), order: o.order ?? 0, locked: !!o.locked, updated: o.updated || 0, data: o.locked ? null : normData(o.data), enc: o.locked ? o.enc : null, key: null, salt: null, iter: null, dirty: false, rev: 0 };
+}
+const manifest = () => ({ format: 'kb-manifest', v: 1, updated: Date.now(), cats: sortedCats().map(c => ({ id: c.id, name: c.name, locked: !!c.locked, order: c.order ?? 0, file: `cat-${c.id}.json` })) });
+
+const persist = debounce(async () => {
+  if (S.mode === 'readonly') return;
+  try {
+    const cats = [];
+    for (const c of S.cats) { const o = await serializeCat(c); o._dirty = !!c.dirty; cats.push(o); }
+    await IDB.set('cache', { v: 1, repo: S.mode === 'github' ? repoKey() : 'local', base: S.base, shas: S.shas, deleted: [...S.deleted], cats });
+  } catch (e) { console.warn('Cache write failed', e); }
+}, 500);
+
+function touch(c, msg) {
+  if (!canEdit() || !c) return;
+  c.dirty = true; c.rev = (c.rev || 0) + 1; c.updated = Date.now();
+  if (msg) S.msgs.add(c.locked ? `Update locked category “${c.name}”` : msg);
+  persist();
+  if (!S.editing) pushSoon();
+  setStatus();
+}
+
+/* ---------- GitHub API ---------- */
+const GH = {
+  base() { return `https://api.github.com/repos/${encodeURIComponent(S.cfg.owner)}/${encodeURIComponent(S.cfg.repo)}`; },
+  async req(method, path, body, raw) {
+    const r = await fetch(this.base() + path, {
+      method, cache: 'no-store',
+      headers: { Authorization: 'Bearer ' + S.token, Accept: raw ? 'application/vnd.github.raw+json' : 'application/vnd.github+json', 'X-GitHub-Api-Version': '2022-11-28', ...(body ? { 'Content-Type': 'application/json' } : {}) },
+      body: body ? JSON.stringify(body) : undefined
+    });
+    if (!r.ok) { let m = ''; try { m = (await r.json()).message; } catch { } const e = new Error(`GitHub ${r.status}${m ? ': ' + m : ''}`); e.status = r.status; throw e; }
+    return raw ? r.text() : (r.status === 204 ? null : r.json());
+  },
+  async head() { return (await this.req('GET', `/git/ref/heads/${S.cfg.branch}`)).object.sha; },
+  async tree(commitSha) {
+    const c = await this.req('GET', `/git/commits/${commitSha}`);
+    const t = await this.req('GET', `/git/trees/${c.tree.sha}?recursive=1`);
+    const pre = dataPath() + '/', map = {};
+    for (const e of t.tree) if (e.type === 'blob' && e.path.startsWith(pre) && /^cat-[\w-]+\.json$/.test(e.path.slice(pre.length))) map[e.path] = e.sha;
+    return { treeSha: c.tree.sha, map };
+  },
+  async blob(sha) { const b = await this.req('GET', `/git/blobs/${sha}`); return TD.decode(b64ToBuf(b.content)); },
+  async commit(parent, treeSha, files, message) {
+    const t = await this.req('POST', '/git/trees', { base_tree: treeSha, tree: files.map(f => f.content == null ? { path: f.path, mode: '100644', type: 'blob', sha: null } : { path: f.path, mode: '100644', type: 'blob', content: f.content }) });
+    const c = await this.req('POST', '/git/commits', { message, tree: t.sha, parents: [parent] });
+    await this.req('PATCH', `/git/refs/heads/${S.cfg.branch}`, { sha: c.sha });
+    return c.sha;
+  },
+  commits(path) { return this.req('GET', `/commits?path=${encodeURIComponent(path)}&sha=${encodeURIComponent(S.cfg.branch)}&per_page=50`); },
+  fileAt(path, ref) { return this.req('GET', `/contents/${path.split('/').map(encodeURIComponent).join('/')}?ref=${ref}`, null, true); }
+};
+
+async function chooseMine(msg) {
+  const v = await modal({ title: 'Sync conflict', body: `<p>${esc(msg)}</p><p class="note">The version you don’t keep is still in the repository’s Git history.</p>`, ok: 'Keep this device’s version', alt: 'Use the repository version', cancel: false });
+  return !(v && v._alt);
+}
+async function adoptRemote(local, rc) {
+  if (local && local.locked && local.key && rc.locked && rc.enc) {
+    try { rc.data = normData(await decryptJSON(rc.enc, local.key)); rc.key = local.key; rc.salt = local.salt; rc.iter = local.iter; } catch { /* PIN changed elsewhere; stays locked */ }
+  }
+  if (local) S.cats[S.cats.indexOf(local)] = rc; else S.cats.push(rc);
+}
+
+async function loadGithub() {
+  setStatus('saving', 'Loading from GitHub…');
+  const cache = await IDB.get('cache');
+  const head = await GH.head();
+  const { map } = await GH.tree(head);
+  const remote = new Map();
+  await Promise.all(Object.entries(map).map(async ([p, sha]) => {
+    try { const c = parseCat(JSON.parse(await GH.blob(sha))); remote.set(c.id, { c, sha, p }); } catch (e) { console.warn('Skipping unreadable file', p, e); }
+  }));
+  const cats = [], deleted = new Set();
+  const sameRepo = cache && cache.repo === repoKey();
+  const fromLocal = cache && cache.repo === 'local';
+  if (sameRepo || fromLocal) {
+    for (const o of cache.cats || []) {
+      if (!o._dirty) continue;
+      const r = remote.get(o.id);
+      const known = sameRepo ? cache.shas?.[catPath(o.id)] : undefined;
+      if (r && r.sha !== known && !(await chooseMine(`“${o.name}” has unsynced changes on this device, and it was also changed in the repository.`))) continue;
+      let c; try { c = parseCat(o); } catch { continue; }
+      c.dirty = true; cats.push(c); remote.delete(o.id);
+    }
+    if (sameRepo) for (const p of cache.deleted || []) if (map[p] && !cats.some(c => catPath(c.id) === p)) { deleted.add(p); remote.delete(idFromPath(p)); }
+  }
+  for (const { c } of remote.values()) cats.push(c);
+  S.cats = cats; S.base = head; S.shas = map; S.deleted = deleted;
+  persist(); setStatus();
+  if (cats.some(c => c.dirty) || deleted.size) pushSoon();
+}
+
+async function loadStatic() {
+  const r = await fetch(`${dataPath()}/manifest.json?t=${Date.now()}`, { cache: 'no-store' });
+  if (!r.ok) throw new Error('No manifest');
+  const m = await r.json(); const cats = [];
+  await Promise.all((m.cats || []).map(async x => {
+    try { const rr = await fetch(`${dataPath()}/${x.file}?t=${Date.now()}`, { cache: 'no-store' }); cats.push(parseCat(await rr.json())); } catch { }
+  }));
+  return cats;
+}
+
+async function reconcileRemote(map) {
+  const paths = new Set([...Object.keys(map), ...Object.keys(S.shas)]);
+  for (const p of paths) {
+    if (map[p] === S.shas[p]) continue;
+    const id = idFromPath(p), local = catById(id);
+    if (!map[p]) { if (local && !local.dirty) S.cats = S.cats.filter(c => c !== local); continue; }
+    const rc = parseCat(JSON.parse(await GH.blob(map[p])));
+    if (S.deleted.has(p)) {
+      if (await chooseMine(`“${rc.name}” was deleted on this device but changed elsewhere. Keep it deleted?`)) continue;
+      S.deleted.delete(p); await adoptRemote(null, rc); continue;
+    }
+    if (local && local.dirty && await chooseMine(`“${local.name}” was changed on another device since your last sync.`)) continue;
+    await adoptRemote(local, rc);
+  }
+  S.shas = { ...map };
+}
+
+const pushSoon = debounce(() => push(), 1500);
+async function push() {
+  if (S.mode !== 'github' || S.editing) return;
+  if (S.pushing) { S.pushAgain = true; return; }
+  if (!S.cats.some(c => c.dirty) && !S.deleted.size) { setStatus(); return; }
+  S.pushing = true; setStatus('saving');
+  try {
+    const head = await GH.head();
+    const { treeSha, map } = await GH.tree(head);
+    if (head !== S.base) await reconcileRemote(map);
+    const pushed = S.cats.filter(c => c.dirty).map(c => ({ c, rev: c.rev }));
+    const files = [];
+    for (const { c } of pushed) files.push({ path: catPath(c.id), content: JSON.stringify(await serializeCat(c), null, 2) + '\n' });
+    const dels = [...S.deleted].filter(p => map[p]);
+    for (const p of dels) files.push({ path: p, content: null });
+    files.push({ path: `${dataPath()}/manifest.json`, content: JSON.stringify(manifest(), null, 2) + '\n' });
+    const msgs = [...S.msgs];
+    const message = 'kb: ' + (msgs.length ? msgs.slice(0, 4).join('; ') + (msgs.length > 4 ? ` (+${msgs.length - 4} more)` : '') : 'Update knowledge base');
+    let sha;
+    try { sha = await GH.commit(head, treeSha, files, message); }
+    catch (e) { if ((e.status === 422 || e.status === 409) && S.retries < 3) { S.retries++; S.pushAgain = true; return; } throw e; }
+    S.retries = 0; S.base = sha;
+    S.shas = (await GH.tree(sha)).map;
+    for (const { c, rev } of pushed) if (c.rev === rev) c.dirty = false;
+    S.deleted.clear(); S.msgs.clear();
+    persist(); setStatus('synced');
+  } catch (e) {
+    console.error(e); setStatus('error', e.message);
+    toast(e.status === 401 || e.status === 403 ? 'GitHub rejected the token. Check it in Settings.' : 'Saving to GitHub failed: ' + e.message, 'err');
+  } finally {
+    S.pushing = false;
+    if (S.pushAgain) { S.pushAgain = false; setTimeout(push, 400); }
+  }
+}
+
+function setStatus(kind, msg) {
+  if (kind) { S.status = kind === 'synced' ? (S.cats.some(c => c.dirty) ? 'dirty' : 'synced') : kind; S.statusMsg = msg || ''; }
+  else if (S.mode === 'github') { if (S.status !== 'saving' && S.status !== 'error') S.status = (S.cats.some(c => c.dirty) || S.deleted.size) ? 'dirty' : 'synced'; }
+  else S.status = S.mode;
+  renderStatus();
+}
+
+/* ---------- vars (TARGET etc.) — stored only on this device ---------- */
+function getVars(catId) { const v = LS.get('vars.' + catId, null); return Array.isArray(v) && v.length ? v : [{ name: 'TARGET', value: '' }]; }
+const setVars = (catId, v) => LS.set('vars.' + catId, v);
+
+/* ---------- rendering helpers ---------- */
+function hl(code, lang) {
+  try { if (window.hljs && lang && lang !== 'plaintext' && hljs.getLanguage(lang)) return hljs.highlight(code, { language: lang, ignoreIllegals: true }).value; } catch { }
+  return esc(code);
+}
+function renderCode(code, lang, vars) {
+  const names = vars.map(v => v.name).filter(n => /^[A-Za-z_][A-Za-z0-9_]*$/.test(n)).sort((a, b) => b.length - a.length);
+  if (!names.length) return { html: hl(code, lang), text: code };
+  const alt = names.map(reEsc).join('|');
+  const re = () => new RegExp(`\\{(${alt})\\}|\\b(${alt})\\b`, 'g');
+  const val = n => (vars.find(v => v.name === n) || {}).value || '';
+  const found = [];
+  const tmp = code.replace(re(), (m, a, b) => { found.push(a || b); return `KBVARX${found.length - 1}X`; });
+  const text = code.replace(re(), (m, a, b) => val(a || b) || m);
+  const html = hl(tmp, lang).replace(/KBVARX(\d+)X/g, (m, i) => {
+    const n = found[+i], v = val(n);
+    return v ? `<span class="var" title="${esc(n)}">${esc(v)}</span>` : `<span class="var empty" title="Set ${esc(n)} in the top bar">${esc(n)}</span>`;
+  });
+  return { html, text };
+}
+function resolveName(name, preferCat) {
+  const lc = name.toLowerCase(); let best = null;
+  for (const c of allUnlocked()) walk(c.data.children, n => { if (n.type === 'file' && n.name.toLowerCase() === lc && (!best || (c.id === preferCat && best.c.id !== preferCat))) best = { c, n }; });
+  return best;
+}
+function md(src, catId) {
+  if (!src || !src.trim()) return '';
+  const linked = src.replace(/\[\[([^\]|\n]+)(?:\|([^\]\n]+))?\]\]/g, (m, name, label) => {
+    const t = resolveName(name.trim(), catId), txt = esc((label || name).trim());
+    return t ? `<a class="wl" href="#/c/${t.c.id}/${t.n.id}">${txt}</a>` : `<a class="wl missing" href="#/go/${encodeURIComponent(name.trim())}" title="No concept with this name yet">${txt}</a>`;
+  });
+  if (!window.marked || !window.DOMPurify) return `<p>${esc(src).replace(/\n/g, '<br>')}</p>`;
+  return DOMPurify.sanitize(marked.parse(linked, { gfm: true, breaks: true }));
+}
+function isEmptyBox(b) {
+  if (b.kind === 'text') return !b.content.trim();
+  if (b.kind === 'code') return !b.lines.some(l => l.code.trim() || l.comment.trim());
+  if (b.kind === 'image') return !b.src;
+  if (b.kind === 'refs') return !b.items.some(i => i.url.trim() || i.title.trim());
+  return true;
+}
+/* Pairs half-width boxes side by side; a half box with no partner stretches to full width. */
+function layout(boxes) {
+  const out = []; let pending = null;
+  for (const b of boxes) {
+    if (b.width === 'full') { if (pending) pending.span = 'full'; pending = null; out.push({ b, span: 'full' }); }
+    else if (pending) { pending = null; out.push({ b, span: 'half' }); }
+    else { pending = { b, span: 'half' }; out.push(pending); }
+  }
+  if (pending) pending.span = 'full';
+  return out;
+}
+const firstText = f => { const b = (f.boxes || []).find(b => b.kind === 'text' && b.content.trim()); return b ? b.content.replace(/\[\[([^\]|]+)(\|[^\]]+)?\]\]/g, '$1').replace(/[#*_`>\[\]()-]/g, '').replace(/\s+/g, ' ').trim().slice(0, 160) : ''; };
+const tagChip = t => `<a class="tag" href="#/tags/${encodeURIComponent(t)}">#${esc(t)}</a>`;
+const normTag = s => String(s).toLowerCase().trim().replace(/^#+/, '').replace(/[\s_]+/g, '-').replace(/[^a-z0-9\-.+]/g, '').replace(/^-+|-+$/g, '').slice(0, 40);
+function tagCounts() { const m = new Map(); for (const c of allUnlocked()) walk(c.data.children, n => { if (n.type === 'file') n.tags.forEach(t => m.set(t, (m.get(t) || 0) + 1)); }); return m; }
+const pathOf = (c, ps) => [c.name, ...ps.map(p => p.name)].join(' / ');
+
+/* ---------- render: sidebar ---------- */
+function treeHtml(c, nodes, parentId, depth) {
+  return `<ul class="tl" data-parent="${parentId}">${nodes.map(n => {
+    const open = n.type === 'folder' && S.expanded.has(n.id);
+    return `<li class="ti" data-id="${n.id}"><div class="tr ${S.route.nodeId === n.id ? 'current' : ''}" style="--d:${depth}">${n.type === 'folder' ? `<button class="tw ${open ? 'open' : ''}" data-act="toggle" data-id="${n.id}" aria-label="${open ? 'Collapse' : 'Expand'}">${ic('chev')}</button>` : '<span class="tw-sp"></span>'}<a class="tlink" href="#/c/${c.id}/${n.id}">${ic(n.type === 'folder' ? 'folder' : 'file')}<span>${esc(n.name)}</span></a>${canEdit() ? `<button class="ib xs tm" data-act="node-menu" data-cat="${c.id}" data-id="${n.id}" aria-label="Actions">${ic('more')}</button>` : ''}</div>${open ? treeHtml(c, n.children, n.id, depth + 1) : ''}</li>`;
+  }).join('')}</ul>`;
+}
+function renderSidebar() {
+  const r = S.route, h = [];
+  h.push(`<div class="sb-top"><a class="brand" href="#/"><span class="mark">${ic('layers')}</span>Knowledge base</a><button class="sb-search" data-act="search">${ic('search')}<span>Search</span><kbd>Ctrl K</kbd></button></div><div class="sb-scroll">`);
+  h.push(`<a class="sb-link ${r.view === 'home' ? 'active' : ''}" href="#/">${ic('home')}Home</a><a class="sb-link ${r.view === 'tags' ? 'active' : ''}" href="#/tags">${ic('tag')}Tags</a>`);
+  h.push(`<div class="sb-sec"><div class="sb-sec-h"><span>Categories</span>${canEdit() ? `<button class="ib xs" data-act="new-cat" aria-label="New category" title="New category">${ic('plus')}</button>` : ''}</div>`);
+  for (const c of sortedCats()) {
+    const active = r.view === 'cat' && r.catId === c.id;
+    h.push(`<div class="sb-cat ${active ? 'active' : ''}"><a class="sb-cat-row ${active && !r.nodeId ? 'current' : ''}" href="#/c/${c.id}">${ic(c.locked ? (c.data ? 'unlock' : 'lock') : 'box')}<span class="t">${esc(c.name)}</span>${c.data ? `<span class="cnt">${countFiles(c.data.children)}</span>` : ''}</a>${active && c.data ? treeHtml(c, c.data.children, 'root', 0) : ''}</div>`);
+  }
+  if (!S.cats.length) h.push(`<p class="note" style="padding:4px 8px">No categories yet.</p>`);
+  h.push('</div>');
+  const tags = [...tagCounts().entries()].sort((a, b) => b[1] - a[1]).slice(0, 30);
+  if (tags.length) h.push(`<div class="sb-sec"><div class="sb-sec-h"><span>Tags</span></div><div class="sb-tags">${tags.map(([t]) => tagChip(t)).join('')}</div></div>`);
+  h.push(`</div><div class="sb-foot"><span class="mode">${S.mode === 'github' ? esc(`${S.cfg.owner}/${S.cfg.repo}`) : S.mode === 'readonly' ? 'Read-only' : 'This browser only'}</span><button class="ib" data-act="settings" aria-label="Settings" title="Settings">${ic('settings')}</button></div>`);
+  $('#sidebar').innerHTML = h.join('');
+  initTreeSort();
+}
+function initTreeSort() {
+  if (!window.Sortable || !canEdit() || S.route.view !== 'cat') return;
+  const c = catById(S.route.catId); if (!c?.data) return;
+  $$('#sidebar .tl').forEach(ul => Sortable.create(ul, {
+    group: 'tree-' + c.id, animation: 150, fallbackOnBody: true, swapThreshold: 0.65, delay: 200, delayOnTouchOnly: true, ghostClass: 'drag-ghost',
+    onEnd: () => rebuildTree(c)
+  }));
+}
+function rebuildTree(c) {
+  const map = new Map(); walk(c.data.children, n => { map.set(n.id, n); });
+  const read = ul => [...ul.children].filter(li => li.matches('li.ti') && map.has(li.dataset.id)).map(li => {
+    const n = map.get(li.dataset.id);
+    if (n.type === 'folder') { const sub = [...li.children].find(x => x.matches('ul.tl')); if (sub) n.children = read(sub); }
+    return n;
+  });
+  const root = $('#sidebar .tl[data-parent="root"]'); if (!root) return;
+  const next = read(root); let count = 0; walk(next, () => { count++; });
+  if (count !== map.size) { render(); return; }
+  c.data.children = next; touch(c, `Reorganize “${c.name}”`); render();
+}
+
+/* ---------- render: topbar & banner ---------- */
+function renderTop() {
+  const r = S.route, cr = [`<a href="#/">Home</a>`];
+  if (r.view === 'cat') {
+    const c = catById(r.catId);
+    if (c) {
+      const f = r.nodeId && findNode(c, r.nodeId);
+      cr.push(f ? `<a href="#/c/${c.id}">${esc(c.name)}</a>` : `<span class="cur">${esc(c.name)}</span>`);
+      if (f) { f.parents.forEach(p => cr.push(`<a href="#/c/${c.id}/${p.id}">${esc(p.name)}</a>`)); cr.push(`<span class="cur">${esc(f.node.name)}</span>`); }
+    }
+  } else if (r.view === 'tags') cr.push('<span class="cur">Tags</span>');
+  const c = r.view === 'cat' && catById(r.catId);
+  const vars = c && c.data ? getVars(c.id) : null;
+  const theme = document.documentElement.dataset.theme;
+  $('#topbar').innerHTML = `<button class="ib mobile-only" data-act="open-sidebar" aria-label="Menu">${ic('menu')}</button><nav class="crumbs" aria-label="Breadcrumb">${cr.join('<span class="sep">/</span>')}</nav><div class="top-r">${vars ? `<div class="vars" title="Values replace these words in this category’s code. Stored only on this device.">${vars.map((v, i) => `<label class="var-f"><span>${esc(v.name)}</span><input data-var="${i}" value="${esc(v.value)}" placeholder="not set" spellcheck="false" autocomplete="off" aria-label="${esc(v.name)} value">${i > 0 ? `<button class="var-x" data-act="var-del" data-i="${i}" aria-label="Remove ${esc(v.name)}">×</button>` : ''}</label>`).join('')}<button class="ib sm" data-act="var-add" aria-label="Add variable" title="Add a variable (e.g. LHOST, PORT)">${ic('plus')}</button></div>` : ''}<button id="status" class="status" data-act="status"></button><button class="ib" data-act="theme" aria-label="Toggle theme">${ic(theme === 'dark' ? 'sun' : 'moon')}</button></div>`;
+  renderStatus();
+}
+function renderStatus() {
+  const el = $('#status'); if (!el) return;
+  const m = { synced: ['ok', 'Saved to GitHub'], dirty: ['warn', 'Unsaved changes'], saving: ['busy', S.statusMsg || 'Saving…'], error: ['err', 'Sync failed'], local: ['', 'Local only'], readonly: ['', 'Read-only'] }[S.status] || ['', ''];
+  el.className = 'status ' + m[0];
+  el.innerHTML = `<span class="dot"></span><span class="lbl">${esc(m[1])}</span>`;
+  el.title = S.status === 'error' ? `${S.statusMsg}\nClick to retry.` : S.status === 'dirty' ? 'Click to save now' : S.mode !== 'github' ? 'Open settings to connect GitHub' : '';
+}
+function renderBanner() {
+  const b = $('#banner');
+  if (!S.loaded) { b.innerHTML = ''; return; }
+  if (S.mode === 'readonly') b.innerHTML = `<div class="banner">${ic('lock')}<span><b>Read-only view.</b> Connect your GitHub token to edit from this device.</span><button class="btn sm" data-act="settings">Connect GitHub</button></div>`;
+  else if (S.mode === 'local') b.innerHTML = `<div class="banner">${ic('box')}<span><b>Saved in this browser only.</b> Connect GitHub to sync across devices and keep version history.</span><button class="btn sm" data-act="settings">Connect GitHub</button></div>`;
+  else b.innerHTML = '';
+}
+
+/* ---------- render: main views ---------- */
+function itemRow({ c, n, ps }) {
+  return `<a class="row" href="#/c/${c.id}/${n.id}">${ic(n.type === 'folder' ? 'folder' : 'file')}<span class="row-name">${esc(n.name)}</span><span class="row-path">${esc(pathOf(c, ps))}</span>${n.tags?.length ? `<span class="tags">${n.tags.slice(0, 3).map(t => `<span class="tag">#${esc(t)}</span>`).join('')}</span>` : ''}</a>`;
+}
+function viewHome() {
+  const cats = sortedCats(), favs = [];
+  for (const c of allUnlocked()) walk(c.data.children, (n, ps) => { if (n.fav) favs.push({ c, n, ps }); });
+  const recent = LS.get('recent', []).map(x => { const c = catById(x.c), f = c && findNode(c, x.n); return f ? { c, n: f.node, ps: f.parents } : null; }).filter(Boolean).slice(0, 8);
+  const card = c => `<a class="cat-card" href="#/c/${c.id}" data-id="${c.id}"><span class="cc-ic">${ic(c.locked ? (c.data ? 'unlock' : 'lock') : 'box')}</span><span class="cc-name">${esc(c.name)}</span><span class="cc-meta">${c.data ? `${plural(countFiles(c.data.children), 'file', 'files')}, ${plural(countFolders(c.data.children), 'folder', 'folders')}` : 'Locked'}</span></a>`;
+  return `<div class="page">
+    <div class="page-h"><div class="ph-l"><h1>Knowledge base</h1><p class="sub">Press <kbd>Ctrl K</kbd> or <kbd>/</kbd> to search everything.</p></div>${canEdit() && cats.length ? `<div class="ph-r"><button class="btn primary" data-act="new-cat">${ic('plus')}New category</button></div>` : ''}</div>
+    ${cats.length ? `<div class="cat-grid" id="cat-grid">${cats.map(card).join('')}</div>` : `<div class="empty"><h2>Start with a category</h2><p>A category is a top-level area such as Networking, Web security or Python. Inside it you can add folders and concept files.</p><div class="acts">${canEdit() ? `<button class="btn primary" data-act="new-cat">${ic('plus')}Create category</button>` : ''}${S.mode !== 'github' ? `<button class="btn" data-act="settings">Connect GitHub</button>` : ''}</div></div>`}
+    ${favs.length ? `<h2 class="sec-t">Favorites</h2><div class="rows">${favs.map(itemRow).join('')}</div>` : ''}
+    ${recent.length ? `<h2 class="sec-t">Recently viewed</h2><div class="rows">${recent.map(itemRow).join('')}</div>` : ''}
+  </div>`;
+}
+function viewUnlock(c) {
+  return `<div class="page center"><div class="lock-card">${ic('lock', 'xl')}<h1>${esc(c.name)}</h1><p class="sub">This category is encrypted. Enter its PIN to open it.</p><form id="unlock-form" class="unlock-f" data-cat="${c.id}"><input class="in" type="password" name="pin" autocomplete="off" placeholder="PIN" aria-label="PIN" autofocus><button class="btn primary" type="submit">Unlock</button></form><p class="m-err" id="unlock-err" hidden></p></div></div>`;
+}
+function viewFolder(c, f) {
+  const node = f?.node, kids = node ? node.children : c.data.children, parent = node ? node.id : 'root';
+  const items = kids.map(n => n.type === 'folder'
+    ? `<a class="item" href="#/c/${c.id}/${n.id}"><span class="item-ic folder">${ic('folder')}</span><span class="item-b"><span class="item-n">${esc(n.name)}</span><span class="item-m">${plural(n.children.length, 'item', 'items')}</span></span></a>`
+    : `<a class="item" href="#/c/${c.id}/${n.id}"><span class="item-ic">${ic('file')}</span><span class="item-b"><span class="item-n">${esc(n.name)}</span>${firstText(n) ? `<span class="item-d">${esc(firstText(n))}</span>` : ''}<span class="item-m">${n.tags.slice(0, 4).map(t => `<span class="tag">#${esc(t)}</span>`).join('')}${n.tags.length ? '' : `Updated ${relTime(n.updated)}`}</span></span></a>`).join('');
+  const sub = node ? pathOf(c, f.parents) : (c.locked ? 'Encrypted with a PIN' : `${plural(countFiles(kids), 'file', 'files')} in ${plural(countFolders(kids), 'folder', 'folders')}`);
+  return `<div class="page">
+    <div class="page-h"><div class="ph-l"><h1>${esc(node ? node.name : c.name)}</h1><p class="sub">${esc(sub)}</p></div>
+      <div class="ph-r">${!node && c.locked ? `<button class="btn" data-act="lock-now" data-cat="${c.id}">${ic('lock')}Lock now</button>` : ''}${!node && S.mode === 'github' ? `<button class="ib" data-act="history" aria-label="Version history" title="Version history">${ic('history')}</button>` : ''}${canEdit() ? `<button class="ib" data-act="${node ? 'node-menu' : 'cat-menu'}" data-cat="${c.id}" data-id="${node ? node.id : ''}" aria-label="More actions">${ic('more')}</button><button class="btn" data-act="new-folder" data-cat="${c.id}" data-parent="${parent}">${ic('folder')}New folder</button><button class="btn primary" data-act="new-file" data-cat="${c.id}" data-parent="${parent}">${ic('plus')}New file</button>` : ''}</div></div>
+    ${kids.length ? `<div class="items">${items}</div>` : `<div class="empty"><h2>Nothing here yet</h2><p>Add a concept file (for example “Nmap” or “TCP handshake”) or a folder to group related concepts.</p>${canEdit() ? `<div class="acts"><button class="btn primary" data-act="new-file" data-cat="${c.id}" data-parent="${parent}">${ic('plus')}New file</button><button class="btn" data-act="new-folder" data-cat="${c.id}" data-parent="${parent}">${ic('folder')}New folder</button></div>` : ''}</div>`}
+  </div>`;
+}
+function codeLinesHtml(c, b) {
+  const vars = getVars(c.id);
+  return b.lines.filter(l => l.code.trim() || l.comment.trim()).map(l => {
+    if (!l.code.trim()) return `<div class="cl only-c"><div class="cl-c">${esc(l.comment)}</div></div>`;
+    const { html, text } = renderCode(l.code, b.lang, vars);
+    return `<div class="cl" data-act="copy-line" data-copy="${esc(text)}" title="Click to copy"><pre><code class="hljs">${html}</code></pre><button class="copy" tabindex="-1" aria-label="Copy line">${ic('copy')}</button>${l.comment.trim() ? `<div class="cl-c">${esc(l.comment)}</div>` : ''}</div>`;
+  }).join('');
+}
+function boxView(c, b, span) {
+  let body = '';
+  if (b.kind === 'text') body = `<div class="md">${md(b.content, c.id)}</div>`;
+  else if (b.kind === 'code') body = `<div class="code-lines">${codeLinesHtml(c, b)}</div>`;
+  else if (b.kind === 'image') body = `<figure class="img"><img src="${esc(b.src)}" alt="${esc(b.caption || b.title)}" data-act="zoom" loading="lazy">${b.caption ? `<figcaption>${esc(b.caption)}</figcaption>` : ''}</figure>`;
+  else if (b.kind === 'refs') body = `<ul class="refs">${b.items.filter(i => i.url.trim() || i.title.trim()).map(i => {
+    const ok = /^https?:\/\//i.test(i.url.trim()); let host = ''; try { host = ok ? new URL(i.url.trim()).hostname.replace(/^www\./, '') : ''; } catch { }
+    return `<li>${ic(ok ? 'ext' : 'book')}<div>${ok ? `<a href="${esc(i.url.trim())}" target="_blank" rel="noopener noreferrer">${esc(i.title || i.url)}</a>` : `<span>${esc(i.title || i.url)}</span>`}${host ? `<span class="host">${esc(host)}</span>` : ''}${i.note ? `<div class="note">${esc(i.note)}</div>` : ''}</div></li>`;
+  }).join('')}</ul>`;
+  const icon = { text: 'text', code: 'code', image: 'image', refs: 'book' }[b.kind];
+  return `<section class="box k-${b.kind} ${span === 'full' ? 'full' : ''}" data-box-id="${b.id}"><header class="box-h">${ic(icon)}<h3>${esc(b.title || BOX_DEFAULT_TITLE[b.kind])}</h3>${b.kind === 'code' && b.lang !== 'plaintext' ? `<span class="lang">${esc(langLabel(b.lang))}</span>` : ''}</header><div class="box-b">${body}</div></section>`;
+}
+function backlinks(f) {
+  const re = new RegExp(`\\[\\[\\s*${reEsc(f.name.trim())}\\s*(\\||\\]\\])`, 'i'), out = [];
+  for (const c of allUnlocked()) walk(c.data.children, (n, ps) => { if (n.type === 'file' && n.id !== f.id && n.boxes.some(b => b.kind === 'text' && re.test(b.content))) out.push({ c, n, ps }); });
+  return out;
+}
+function viewFile(c, f) {
+  const n = f.node, vis = n.boxes.filter(b => !isEmptyBox(b)), bl = backlinks(n);
+  return `<div class="page">
+    <div class="page-h"><div class="ph-l"><h1>${esc(n.name)}</h1><div class="meta">${n.tags.map(tagChip).join('')}<span>Updated ${relTime(n.updated)}</span></div></div>
+      <div class="ph-r"><button class="ib ${n.fav ? 'on' : ''}" data-act="fav" aria-label="Favorite" title="${n.fav ? 'Remove from favorites' : 'Add to favorites'}">${ic('star', n.fav ? 'fill' : '')}</button>${S.mode === 'github' ? `<button class="ib" data-act="history" aria-label="Version history" title="Version history">${ic('history')}</button>` : ''}${canEdit() ? `<button class="ib" data-act="node-menu" data-cat="${c.id}" data-id="${n.id}" aria-label="More actions">${ic('more')}</button><button class="btn primary" data-act="edit" title="Edit (E)">${ic('edit')}Edit</button>` : ''}</div></div>
+    ${vis.length ? `<div class="boxes">${layout(vis).map(({ b, span }) => boxView(c, b, span)).join('')}</div>` : `<div class="empty"><h2>This concept is empty</h2><p>Add a description, types, commands and images.</p>${canEdit() ? `<div class="acts"><button class="btn primary" data-act="edit">${ic('edit')}Start editing</button></div>` : ''}</div>`}
+    ${bl.length ? `<div class="backlinks"><span>Linked from</span>${bl.map(x => `<a href="#/c/${x.c.id}/${x.n.id}">${ic('link')}${esc(x.n.name)}</a>`).join('')}</div>` : ''}
+  </div>`;
+}
+
+/* edit mode */
+const lineEdit = l => `<div class="ed-line" data-line-id="${l.id}"><span class="grip line-drag" title="Drag to reorder">${ic('grip')}</span><div class="ed-line-f"><textarea class="code-in" data-f="line-code" rows="1" data-grow spellcheck="false" autocapitalize="off" autocomplete="off" placeholder="Command or code (Enter = new line, Shift+Enter = line break)">${esc(l.code)}</textarea><input class="cmt-in" data-f="line-comment" value="${esc(l.comment)}" placeholder="Comment (optional)"></div><button class="ib sm danger" data-act="line-del" aria-label="Remove line" title="Remove line">${ic('x')}</button></div>`;
+function boxEdit(b, span) {
+  let body = '';
+  if (b.kind === 'text') body = `<div class="md-tools"><button class="tb" data-act="md" data-md="bold" title="Bold"><b>B</b></button><button class="tb" data-act="md" data-md="italic" title="Italic"><i>I</i></button><button class="tb" data-act="md" data-md="code" title="Inline code"><code>&lt;/&gt;</code></button><button class="tb" data-act="md" data-md="list" title="Bulleted list">• List</button><button class="tb" data-act="md" data-md="link" title="Link to another concept">${ic('link')}</button></div><textarea class="ta" data-f="content" data-grow placeholder="Write here. Markdown works: **bold**, - lists, \`code\`, tables. Link a concept with [[Name]].">${esc(b.content)}</textarea>`;
+  else if (b.kind === 'code') body = `<div class="ed-lines" data-lines>${b.lines.map(lineEdit).join('')}</div><button class="add-line" data-act="add-line">${ic('plus')}Add line</button>`;
+  else if (b.kind === 'image') body = b.src
+    ? `<figure class="img"><img src="${esc(b.src)}" alt=""></figure><div class="img-acts"><label class="btn sm">${ic('upload')}Replace<input type="file" accept="image/*" data-f="image" hidden></label><button class="btn sm danger" data-act="img-remove">Remove image</button></div><input class="in" data-f="caption" value="${esc(b.caption)}" placeholder="Caption (optional)">`
+    : `<label class="drop" data-drop>${ic('image')}<span>Drop an image, paste one, or <u>choose a file</u></span><input type="file" accept="image/*" data-f="image" hidden></label>`;
+  else if (b.kind === 'refs') body = `<div class="ref-ed">${b.items.map(i => `<div class="ref-row" data-item-id="${i.id}"><input class="in" data-f="ref-title" value="${esc(i.title)}" placeholder="Title"><input class="in" data-f="ref-url" value="${esc(i.url)}" placeholder="https://…"><button class="ib sm danger" data-act="ref-del" aria-label="Remove reference">${ic('x')}</button><input class="in note-in" data-f="ref-note" value="${esc(i.note)}" placeholder="Note (optional)"></div>`).join('')}</div><button class="add-line" data-act="ref-add">${ic('plus')}Add reference</button>`;
+  return `<section class="box editing k-${b.kind} ${span === 'full' ? 'full' : ''}" data-box-id="${b.id}"><header class="box-h"><span class="grip box-drag" title="Drag to reorder">${ic('grip')}</span><input class="box-title" data-f="box-title" value="${esc(b.title)}" placeholder="${BOX_DEFAULT_TITLE[b.kind]}" aria-label="Box title">${b.kind === 'code' ? `<select class="lang-sel" data-f="lang" aria-label="Language">${LANGS.map(([v, l]) => `<option value="${v}" ${v === b.lang ? 'selected' : ''}>${l}</option>`).join('')}</select>` : ''}<button class="ib sm" data-act="box-width" title="${b.width === 'full' ? 'Full width. Click for half width' : 'Half width. Click for full width'}" aria-label="Toggle width">${ic(b.width === 'full' ? 'wfull' : 'whalf')}</button><button class="ib sm danger" data-act="box-del" title="Remove box" aria-label="Remove box">${ic('trash')}</button></header><div class="box-b">${body}</div></section>`;
+}
+const tagsEditor = n => `${n.tags.map(t => `<span class="tag">#${esc(t)}<button data-act="tag-del" data-tag="${esc(t)}" aria-label="Remove tag">×</button></span>`).join('')}<input class="tag-in" data-f="tag-input" placeholder="${n.tags.length ? 'Add tag' : 'Add tags (Enter after each)'}" list="tag-list" aria-label="Add tag"><datalist id="tag-list">${[...tagCounts().keys()].map(t => `<option value="${esc(t)}">`).join('')}</datalist>`;
+function viewEdit(c, f) {
+  const n = f.node;
+  return `<div class="page">
+    <div class="page-h"><div class="ph-l"><input class="title-in" data-f="name" value="${esc(n.name)}" placeholder="Concept name" aria-label="Concept name"><div class="tags-ed" id="tags-ed">${tagsEditor(n)}</div></div></div>
+    <div class="boxes" id="edit-boxes">${layout(n.boxes).map(({ b, span }) => boxEdit(b, span)).join('')}</div>
+    <div class="add-box"><span>Add a box</span><button class="btn sm" data-act="add-box" data-kind="text">${ic('text')}Text</button><button class="btn sm" data-act="add-box" data-kind="code">${ic('code')}Code</button><button class="btn sm" data-act="add-box" data-kind="image">${ic('image')}Image</button><button class="btn sm" data-act="add-box" data-kind="refs">${ic('book')}References</button></div>
+    <p class="hint">Two half-width boxes sit side by side; a half box without a partner stretches to full width. Empty boxes are hidden when you’re not editing. Use <code>TARGET</code> or <code>{TARGET}</code> in code and it’s filled from the box in the top bar.</p>
+    <div class="dock"><span class="lbl">${ic('edit')}Editing</span><button class="btn sm" data-act="edit-cancel">Cancel</button><button class="btn sm primary" data-act="edit-done" title="Ctrl+S">${ic('check')}Done</button></div>
+  </div>`;
+}
+function viewTags(r) {
+  const counts = [...tagCounts().entries()].sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]));
+  const sel = r.tags.filter(t => counts.some(([x]) => x === t));
+  const toggled = t => (sel.includes(t) ? sel.filter(x => x !== t) : [...sel, t]).map(encodeURIComponent).join(',');
+  const res = [];
+  if (sel.length) for (const c of allUnlocked()) walk(c.data.children, (n, ps) => { if (n.type === 'file' && sel.every(t => n.tags.includes(t))) res.push({ c, n, ps }); });
+  const locked = S.cats.filter(c => !c.data).length;
+  return `<div class="page"><div class="page-h"><div class="ph-l"><h1>Tags</h1><p class="sub">Select tags to filter. Files must have every selected tag.${locked ? ` ${plural(locked, 'locked category is', 'locked categories are')} not included until unlocked.` : ''}</p></div></div>
+    ${counts.length ? `<div class="tag-cloud">${counts.map(([t, n]) => `<a class="tag ${sel.includes(t) ? 'on' : ''}" href="#/tags/${toggled(t)}">#${esc(t)} <span>${n}</span></a>`).join('')}</div>` : `<div class="empty"><h2>No tags yet</h2><p>Add tags to a file while editing it, for example #recon, #windows or #port-445.</p></div>`}
+    ${sel.length ? `<h2 class="sec-t">${plural(res.length, 'file', 'files')}</h2>${res.length ? `<div class="rows">${res.map(itemRow).join('')}</div>` : ''}` : ''}</div>`;
+}
+
+function renderMain() {
+  const r = S.route, m = $('#main');
+  let html = '';
+  if (!S.loaded) html = `<div class="page"><p class="sub">Loading…</p></div>`;
+  else if (r.view === 'home') html = viewHome();
+  else if (r.view === 'tags') html = viewTags(r);
+  else if (r.view === 'cat') {
+    const c = catById(r.catId);
+    if (!c) html = `<div class="page"><div class="empty"><h2>Category not found</h2><p>It may have been deleted on another device.</p><div class="acts"><a class="btn" href="#/">Go home</a></div></div></div>`;
+    else if (!c.data) html = viewUnlock(c);
+    else if (!r.nodeId) html = viewFolder(c, null);
+    else {
+      const f = findNode(c, r.nodeId);
+      if (!f) html = `<div class="page"><div class="empty"><h2>Not found</h2><p>This item no longer exists.</p><div class="acts"><a class="btn" href="#/c/${c.id}">Open ${esc(c.name)}</a></div></div></div>`;
+      else if (f.node.type === 'folder') html = viewFolder(c, f);
+      else html = S.editing && S.editing.nodeId === f.node.id ? viewEdit(c, f) : viewFile(c, f);
+    }
+  }
+  m.innerHTML = html;
+  afterMain();
+}
+function afterMain() {
+  $$('#main textarea[data-grow]').forEach(grow);
+  $$('#main .md a[href^="http"]').forEach(a => { a.target = '_blank'; a.rel = 'noopener noreferrer'; });
+  if (window.hljs) $$('#main .md pre code').forEach(el => { try { hljs.highlightElement(el); } catch { } });
+  if (!window.Sortable || !canEdit()) return;
+  const grid = $('#cat-grid');
+  if (grid) Sortable.create(grid, {
+    animation: 150, delay: 200, delayOnTouchOnly: true, ghostClass: 'drag-ghost',
+    onEnd() { $$('.cat-card', grid).forEach((el, i) => { const c = catById(el.dataset.id); if (c && c.order !== i) { c.order = i; touch(c, 'Reorder categories'); } }); renderSidebar(); }
+  });
+  const eb = $('#edit-boxes'), ctx = editCtx();
+  if (eb && ctx) {
+    Sortable.create(eb, {
+      handle: '.box-drag', animation: 150, ghostClass: 'drag-ghost',
+      onEnd() { const order = $$(':scope > .box', eb).map(x => x.dataset.boxId); ctx.f.boxes.sort((a, b) => order.indexOf(a.id) - order.indexOf(b.id)); markEdit(); renderMain(); }
+    });
+    $$('[data-lines]', eb).forEach(el => Sortable.create(el, {
+      handle: '.line-drag', animation: 120, ghostClass: 'drag-ghost',
+      onEnd() { const b = boxOf(el, ctx.f), order = $$(':scope > .ed-line', el).map(x => x.dataset.lineId); b.lines.sort((x, y) => order.indexOf(x.id) - order.indexOf(y.id)); markEdit(); }
+    }));
+  }
+}
+function grow(t) { t.style.height = 'auto'; t.style.height = t.scrollHeight + 2 + 'px'; }
+
+function render() { renderSidebar(); renderTop(); renderBanner(); renderMain(); }
+
+/* ---------- routing ---------- */
+function parseRoute() {
+  const raw = location.hash.replace(/^#\/?/, '');
+  const p = raw.split('/').filter(Boolean).map(s => { try { return decodeURIComponent(s); } catch { return s; } });
+  if (p[0] === 'c' && p[1]) return { view: 'cat', catId: p[1], nodeId: p[2] || null };
+  if (p[0] === 'tags') return { view: 'tags', tags: p[1] ? p[1].split(',').map(normTag).filter(Boolean) : [] };
+  if (p[0] === 'go') return { view: 'go', name: p.slice(1).join('/') };
+  return { view: 'home' };
+}
+function onRoute() {
+  const r = parseRoute();
+  if (r.view === 'go') {
+    const t = resolveName(r.name, S.route.catId);
+    if (t) location.replace(`#/c/${t.c.id}/${t.n.id}`); else { toast(`No concept named “${r.name}” yet`); history.back(); }
+    return;
+  }
+  if (S.editing && !(r.view === 'cat' && r.nodeId === S.editing.nodeId)) finishEdit(true, true);
+  S.route = r;
+  document.body.classList.remove('sb-open');
+  if (r.view === 'cat') {
+    const c = catById(r.catId), f = c && findNode(c, r.nodeId);
+    if (f) {
+      f.parents.forEach(p => S.expanded.add(p.id));
+      if (f.node.type === 'folder') S.expanded.add(f.node.id);
+      saveExpanded();
+      if (f.node.type === 'file') { const rec = LS.get('recent', []).filter(x => x.n !== f.node.id); rec.unshift({ c: c.id, n: f.node.id }); LS.set('recent', rec.slice(0, 12)); }
+    }
+  }
+  render();
+  window.scrollTo(0, 0);
+}
+
+/* ---------- edit helpers ---------- */
+function editCtx() { const e = S.editing; if (!e) return null; const c = catById(e.catId), f = c && findNode(c, e.nodeId); return f ? { c, f: f.node } : null; }
+const boxOf = (el, f) => f.boxes.find(b => b.id === el.closest('[data-box-id]')?.dataset.boxId);
+const lineOf = (el, b) => b.lines.find(l => l.id === el.closest('[data-line-id]')?.dataset.lineId);
+const itemOf = (el, b) => b.items.find(i => i.id === el.closest('[data-item-id]')?.dataset.itemId);
+function markEdit() { const x = editCtx(); if (x) touch(x.c); }
+function routeFile() { const r = S.route; if (r.view !== 'cat') return null; const c = catById(r.catId), f = c && findNode(c, r.nodeId); return f && f.node.type === 'file' ? { c, f: f.node } : null; }
+function startEdit() {
+  const x = routeFile(); if (!x || !canEdit()) return;
+  S.editing = { catId: x.c.id, nodeId: x.f.id, snap: clone(x.f), wasDirty: x.c.dirty };
+  renderMain();
+  $('.title-in')?.focus();
+}
+function finishEdit(save, silent) {
+  const ed = S.editing; if (!ed) return;
+  const c = catById(ed.catId), f = c && findNode(c, ed.nodeId)?.node;
+  S.editing = null;
+  if (c && f) {
+    if (save) {
+      f.name = f.name.trim() || 'Untitled'; f.updated = Date.now();
+      if (JSON.stringify(f) !== JSON.stringify({ ...ed.snap, updated: f.updated })) touch(c, `Edit “${f.name}”`);
+      else if (!ed.wasDirty) { c.dirty = false; persist(); }
+      if (S.cats.some(x => x.dirty)) push();
+    } else {
+      Object.keys(f).forEach(k => delete f[k]); Object.assign(f, ed.snap);
+      if (!ed.wasDirty) c.dirty = false;
+      persist(); setStatus();
+    }
+  }
+  if (!silent) render();
+}
+function rerenderLines(b) {
+  const el = $(`.box[data-box-id="${b.id}"] [data-lines]`); if (!el) return;
+  el.innerHTML = b.lines.map(lineEdit).join('');
+  $$('textarea[data-grow]', el).forEach(grow);
+}
+function focusLine(id, pos) { const ta = $(`[data-line-id="${id}"] .code-in`); if (ta) { ta.focus(); const p = pos ?? ta.value.length; ta.setSelectionRange(p, p); } }
+
+async function imageToDataURL(file) {
+  if (!file || !file.type.startsWith('image/')) throw new Error('That file is not an image.');
+  const readURL = f => new Promise((res, rej) => { const r = new FileReader(); r.onload = () => res(r.result); r.onerror = () => rej(r.error); r.readAsDataURL(f); });
+  if (/gif|svg/.test(file.type)) { if (file.size > 3e6) throw new Error('GIF and SVG images must be under 3 MB.'); return readURL(file); }
+  const url = URL.createObjectURL(file);
+  try {
+    const img = await new Promise((res, rej) => { const i = new Image(); i.onload = () => res(i); i.onerror = () => rej(new Error('Could not read the image.')); i.src = url; });
+    const s = Math.min(1, 1800 / Math.max(img.naturalWidth, img.naturalHeight));
+    const cv = document.createElement('canvas'); cv.width = Math.round(img.naturalWidth * s); cv.height = Math.round(img.naturalHeight * s);
+    const ctx = cv.getContext('2d'); ctx.drawImage(img, 0, 0, cv.width, cv.height);
+    let out = cv.toDataURL('image/webp', 0.86);
+    if (!out.startsWith('data:image/webp')) { ctx.globalCompositeOperation = 'destination-over'; ctx.fillStyle = '#fff'; ctx.fillRect(0, 0, cv.width, cv.height); out = cv.toDataURL('image/jpeg', 0.86); }
+    return out;
+  } finally { URL.revokeObjectURL(url); }
+}
+async function setImage(b, file) {
+  try { b.src = await imageToDataURL(file); markEdit(); renderMain(); }
+  catch (e) { toast(e.message, 'err'); }
+}
+
+/* ---------- category & node operations ---------- */
+const pinFields = () => `<label class="f">PIN<input class="in" type="password" name="pin" autocomplete="new-password" autofocus></label><label class="f">Repeat PIN<input class="in" type="password" name="pin2" autocomplete="new-password"></label><p class="note">At least 4 characters; 6 or more is much safer. The encrypted file sits in your repository, so a short PIN can be guessed offline by someone determined. There is no recovery if you forget it.</p>`;
+const pinValidate = v => !v.pin || v.pin.length < 4 ? 'Use at least 4 characters.' : v.pin !== v.pin2 ? 'The PINs don’t match.' : null;
+async function applyPin(c, pin) {
+  const salt = crypto.getRandomValues(new Uint8Array(16));
+  c.key = await deriveKey(pin, salt, PBKDF2_ITER); c.salt = salt; c.iter = PBKDF2_ITER; c.locked = true;
+}
+async function newCategory() {
+  const v = await modal({
+    title: 'New category', ok: 'Create category',
+    body: `<label class="f">Name<input class="in" name="name" maxlength="80" placeholder="e.g. Networking, Web security, Python" autofocus></label><label class="chk"><input type="checkbox" name="lock" id="nc-lock"> Protect with a PIN (encrypts its contents)</label><div id="nc-pin" hidden style="display:flex;flex-direction:column;gap:12px">${pinFields()}</div>`,
+    onOpen: el => { const cb = $('#nc-lock', el), box = $('#nc-pin', el); cb.addEventListener('change', () => { box.hidden = !cb.checked; box.style.display = cb.checked ? 'flex' : 'none'; }); box.style.display = 'none'; },
+    validate: v => !v.name?.trim() ? 'Give the category a name.' : v.lock ? pinValidate(v) : null
+  });
+  if (!v) return;
+  const c = { id: uid(), name: v.name.trim(), order: S.cats.reduce((m, x) => Math.max(m, (x.order ?? 0) + 1), 0), locked: false, updated: Date.now(), data: { children: [] }, enc: null, key: null, salt: null, iter: null, dirty: true, rev: 0 };
+  if (v.lock) await applyPin(c, v.pin);
+  S.cats.push(c); touch(c, `Create category “${c.name}”`);
+  location.hash = `#/c/${c.id}`;
+}
+async function promptName(title, value = '', placeholder = '') {
+  const v = await modal({ title, ok: value ? 'Rename' : 'Create', body: `<input class="in" name="name" value="${esc(value)}" placeholder="${esc(placeholder)}" maxlength="120" autofocus aria-label="Name">`, validate: v => v.name.trim() ? null : 'Enter a name.' });
+  return v ? v.name.trim() : null;
+}
+async function createNode(c, parentId, type) {
+  const name = await promptName(type === 'file' ? 'New file' : 'New folder', '', type === 'file' ? 'e.g. Nmap, TCP handshake, SQL injection' : 'e.g. Scanning, Protocols');
+  if (!name) return;
+  const n = type === 'file' ? newFile(name) : newFolder(name);
+  const list = listOf(c, parentId); if (!list) return;
+  list.push(n);
+  if (parentId && parentId !== 'root') { S.expanded.add(parentId); saveExpanded(); }
+  touch(c, `Create ${type} “${name}”`);
+  if (type === 'file') S.editing = { catId: c.id, nodeId: n.id, snap: clone(n), wasDirty: true };
+  location.hash = `#/c/${c.id}/${n.id}`;
+}
+function regenIds(n) { n.id = uid(); if (n.type === 'folder') n.children.forEach(regenIds); else n.boxes.forEach(b => { b.id = uid(); (b.lines || []).forEach(l => l.id = uid()); (b.items || []).forEach(i => i.id = uid()); }); return n; }
+async function deleteNode(c, id) {
+  const f = findNode(c, id); if (!f) return;
+  const n = f.node, extra = n.type === 'folder' ? ` and the ${plural(countFiles(n.children), 'file', 'files')} inside it` : '';
+  if (!await confirmDlg(`Delete “${n.name}”?`, `This removes it${extra}. You can restore it from version history.`, 'Delete', true)) return;
+  const list = f.parents.length ? f.parents[f.parents.length - 1].children : c.data.children;
+  list.splice(list.indexOf(n), 1);
+  touch(c, `Delete “${n.name}”`);
+  const cur = S.route.nodeId;
+  if (cur === id || (cur && !findNode(c, cur))) location.hash = f.parents.length ? `#/c/${c.id}/${f.parents[f.parents.length - 1].id}` : `#/c/${c.id}`;
+  else render();
+}
+function nodeMenu(anchor, c, id) {
+  const f = findNode(c, id); if (!f) return; const n = f.node;
+  const items = [];
+  if (n.type === 'folder') items.push({ label: 'New file here', icon: 'file', run: () => createNode(c, id, 'file') }, { label: 'New folder here', icon: 'folder', run: () => createNode(c, id, 'folder') }, '-');
+  items.push({ label: 'Rename', icon: 'edit', run: async () => { const nm = await promptName('Rename', n.name); if (nm) { n.name = nm; touch(c, `Rename to “${nm}”`); render(); } } });
+  if (n.type === 'file') {
+    items.push({ label: n.fav ? 'Remove from favorites' : 'Add to favorites', icon: 'star', run: () => { n.fav = !n.fav; touch(c); render(); } });
+    items.push({ label: 'Duplicate', icon: 'dup', run: () => { const copy = regenIds(clone(n)); copy.name += ' (copy)'; copy.fav = false; const list = f.parents.length ? f.parents[f.parents.length - 1].children : c.data.children; list.splice(list.indexOf(n) + 1, 0, copy); touch(c, `Duplicate “${n.name}”`); location.hash = `#/c/${c.id}/${copy.id}`; } });
+  }
+  items.push('-', { label: 'Delete', icon: 'trash', danger: true, run: () => deleteNode(c, id) });
+  openMenu(anchor, items);
+}
+function catMenu(anchor, c) {
+  const items = [
+    { label: 'New file', icon: 'file', run: () => createNode(c, 'root', 'file') },
+    { label: 'New folder', icon: 'folder', run: () => createNode(c, 'root', 'folder') }, '-',
+    { label: 'Rename category', icon: 'edit', run: async () => { const nm = await promptName('Rename category', c.name); if (nm) { c.name = nm; touch(c, `Rename category to “${nm}”`); render(); } } }
+  ];
+  if (!c.locked) items.push({ label: 'Protect with PIN', icon: 'lock', run: () => setPinFlow(c) });
+  else items.push({ label: 'Change PIN', icon: 'key', run: () => setPinFlow(c, true) }, { label: 'Remove PIN', icon: 'unlock', run: () => removePin(c) }, { label: 'Lock now', icon: 'lock', run: () => lockNow(c) });
+  if (S.mode === 'github') items.push({ label: 'Version history', icon: 'history', run: () => openHistory(c) });
+  items.push('-', { label: 'Delete category', icon: 'trash', danger: true, run: () => deleteCategory(c) });
+  openMenu(anchor, items);
+}
+async function setPinFlow(c, change) {
+  const hadPlain = !change && S.shas[catPath(c.id)];
+  const v = await modal({
+    title: change ? `Change PIN for “${c.name}”` : `Protect “${c.name}” with a PIN`, ok: change ? 'Change PIN' : 'Encrypt category',
+    body: pinFields() + (hadPlain ? `<p class="note"><b>Earlier versions stay readable in Git history.</b> This category was already saved unencrypted, so its past versions remain in the repository. Only future versions are encrypted. To remove the old ones you would need to rewrite the repository’s history.</p>` : '') + `<p class="note">The category’s name stays visible; everything inside it is encrypted.</p>`,
+    validate: pinValidate
+  });
+  if (!v) return;
+  await applyPin(c, v.pin);
+  touch(c, change ? `Change PIN of “${c.name}”` : `Encrypt category “${c.name}”`);
+  toast(change ? 'PIN changed' : 'Category encrypted'); render();
+}
+async function removePin(c) {
+  if (!await confirmDlg(`Remove the PIN from “${c.name}”?`, 'Its contents will be saved unencrypted and anyone who can see the repository can read them.', 'Remove PIN', true)) return;
+  c.locked = false; c.key = c.salt = c.iter = null; c.enc = null;
+  touch(c, `Remove PIN from “${c.name}”`); render();
+}
+async function lockNow(c) {
+  if (!c.locked || !c.data) return;
+  if (S.editing?.catId === c.id) finishEdit(true, true);
+  c.enc = await encryptJSON(c.data, c.key, c.salt, c.iter);
+  c.data = null; c.key = null;
+  persist(); render();
+}
+async function unlock(c, pin) {
+  const k = await keyFromEnv(c.enc, pin);
+  const data = await decryptJSON(c.enc, k.key);
+  c.data = normData(data); c.key = k.key; c.salt = k.salt; c.iter = k.iter;
+}
+async function deleteCategory(c) {
+  const v = await modal({ title: `Delete “${c.name}”?`, danger: true, ok: 'Delete category', body: `<p>This removes the category and everything in it from the current version. Past versions remain in Git history.</p><label class="f">Type the category name to confirm<input class="in" name="confirm" autocomplete="off" autofocus></label>`, validate: v => v.confirm.trim() === c.name ? null : 'The name doesn’t match.' });
+  if (!v) return;
+  S.cats = S.cats.filter(x => x !== c);
+  if (S.shas[catPath(c.id)]) S.deleted.add(catPath(c.id));
+  S.msgs.add(`Delete category “${c.name}”`);
+  LS.del('vars.' + c.id);
+  persist(); setStatus(); pushSoon();
+  location.hash = '#/';
+}
+
+/* ---------- version history ---------- */
+async function openHistory(c) {
+  if (S.mode !== 'github') { toast('Version history needs a GitHub connection.'); return; }
+  if (!c.data) { toast('Unlock the category first.'); return; }
+  const path = catPath(c.id);
+  const node = S.route.catId === c.id && S.route.nodeId ? findNode(c, S.route.nodeId)?.node : null;
+  const fileMode = node && node.type === 'file';
+  modal({
+    title: fileMode ? `History of “${node.name}”` : `History of “${c.name}”`, wide: true, ok: 'Close', cancel: false,
+    body: `${c.dirty ? `<p class="note">You have unsaved changes on this device; they aren’t in the history yet.</p>` : ''}<div class="hist"><div class="hist-list" id="hist-list"><p class="pal-empty">Loading…</p></div><div class="hist-prev" id="hist-prev"><p class="sub">Pick a version on the left to preview it.</p></div></div>`,
+    onOpen: async (el, done) => {
+      let list;
+      try { list = await GH.commits(path); } catch (e) { $('#hist-list', el).innerHTML = `<p class="pal-empty">${esc(e.message)}</p>`; return; }
+      if (!list.length) { $('#hist-list', el).innerHTML = `<p class="pal-empty">No saved versions yet.</p>`; return; }
+      $('#hist-list', el).innerHTML = list.map((cm, i) => `<button type="button" class="hist-item" data-sha="${cm.sha}"><div class="d">${esc(new Date(cm.commit.author?.date || cm.commit.committer?.date).toLocaleString())}${i === 0 ? ' (latest)' : ''}</div><div class="m">${esc(cm.commit.message.replace(/^kb:\s*/, ''))}</div></button>`).join('');
+      $('#hist-list', el).addEventListener('click', async e => {
+        const btn = e.target.closest('.hist-item'); if (!btn) return;
+        $$('.hist-item', el).forEach(x => x.classList.toggle('sel', x === btn));
+        const prev = $('#hist-prev', el); prev.innerHTML = '<p class="sub">Loading version…</p>';
+        try {
+          const obj = JSON.parse(await GH.fileAt(path, btn.dataset.sha));
+          let data;
+          if (obj.locked) {
+            try { if (!c.key) throw 0; data = await decryptJSON(obj.enc, c.key); }
+            catch {
+              prev.innerHTML = `<p class="sub">This version was encrypted with a different PIN.</p><form class="unlock-f" id="hist-pin"><input class="in" type="password" name="pin" placeholder="Old PIN" aria-label="Old PIN"><button class="btn primary" type="submit">Decrypt</button></form>`;
+              data = await new Promise(res => $('#hist-pin', prev).addEventListener('submit', async ev => { ev.preventDefault(); ev.stopPropagation(); try { const k = await keyFromEnv(obj.enc, ev.target.pin.value); res(await decryptJSON(obj.enc, k.key)); } catch { toast('Wrong PIN', 'err'); } }));
+            }
+          } else data = obj.data;
+          data = normData(data);
+          const vc = { data }, vf = fileMode ? findNode(vc, node.id)?.node : null;
+          const restoreCat = `<button type="button" class="btn" data-h="cat">${ic('history')}Restore entire category</button>`;
+          if (fileMode) prev.innerHTML = vf
+            ? `<div class="hist-acts"><button type="button" class="btn primary" data-h="file">${ic('history')}Restore this file</button>${restoreCat}</div><h1 style="font-size:20px;margin-bottom:12px">${esc(vf.name)}</h1><div class="boxes">${layout(vf.boxes.filter(b => !isEmptyBox(b))).map(({ b }) => boxView(c, b, 'full')).join('') || '<p class="sub">Empty in this version.</p>'}</div>`
+            : `<div class="hist-acts">${restoreCat}</div><p class="sub">This file didn’t exist in this version.</p>`;
+          else prev.innerHTML = `<div class="hist-acts">${restoreCat}</div><p class="sub">${plural(countFiles(data.children), 'file', 'files')} in ${plural(countFolders(data.children), 'folder', 'folders')}:</p><ul>${data.children.map(n => `<li>${esc(n.name)}${n.type === 'folder' ? '/' : ''}</li>`).join('')}</ul>`;
+          prev.onclick = async ev => {
+            const h = ev.target.closest('[data-h]')?.dataset.h; if (!h) return;
+            if (S.editing) finishEdit(true, true);
+            if (h === 'file') { const cur = findNode(c, node.id)?.node; const restored = clone(vf); if (cur) { Object.keys(cur).forEach(k => delete cur[k]); Object.assign(cur, restored); } else c.data.children.push(restored); touch(c, `Restore “${vf.name}”`); }
+            else { if (!await confirmDlg('Restore the entire category?', 'Everything in this category is replaced with the selected version. The current version stays in history.', 'Restore')) return; c.data = clone(data); touch(c, `Restore category “${c.name}”`); }
+            done(null); toast('Restored'); render();
+          };
+        } catch (e2) { prev.innerHTML = `<p class="sub">${esc(e2.message)}</p>`; }
+      });
+    }
+  });
+}
+
+/* ---------- search palette ---------- */
+function searchIndex() {
+  const out = [];
+  for (const c of allUnlocked()) {
+    out.push({ kind: 'cat', c, n: null, ps: [], name: c.name, tags: [], text: '' });
+    walk(c.data.children, (n, ps) => {
+      let text = '';
+      if (n.type === 'file') text = n.boxes.map(b => b.title + '\n' + (b.kind === 'text' ? b.content : b.kind === 'code' ? b.lines.map(l => l.code + '  ' + l.comment).join('\n') : b.kind === 'refs' ? b.items.map(i => `${i.title} ${i.url} ${i.note}`).join('\n') : b.caption || '')).join('\n');
+      out.push({ kind: n.type, c, n, ps, name: n.name, tags: n.tags || [], text });
+    });
+  }
+  return out;
+}
+function snippet(text, words) {
+  const lt = text.toLowerCase(); let at = -1, w = '';
+  for (const x of words) { const i = lt.indexOf(x); if (i >= 0) { at = i; w = x; break; } }
+  if (at < 0) return '';
+  const s = Math.max(0, at - 40), e = Math.min(text.length, at + w.length + 70);
+  let snip = (s ? '…' : '') + text.slice(s, e).replace(/\s+/g, ' ') + (e < text.length ? '…' : '');
+  snip = esc(snip);
+  for (const x of words) snip = snip.replace(new RegExp(reEsc(esc(x)), 'gi'), m => `<mark>${m}</mark>`);
+  return snip;
+}
+function markName(name, words) { let s = esc(name); for (const w of words) s = s.replace(new RegExp(reEsc(esc(w)), 'gi'), m => `<mark>${m}</mark>`); return s; }
+function openSearch(pick) {
+  closeMenu(); $('.pal-bg')?.remove();
+  const idx = searchIndex(), locked = S.cats.filter(c => !c.data).length;
+  const el = document.createElement('div'); el.className = 'modal-bg pal-bg';
+  el.innerHTML = `<div class="palette" role="dialog" aria-label="Search"><div class="pal-in">${ic('search')}<input id="pal-q" placeholder="${pick ? 'Find a concept to link…' : 'Search titles, notes, commands…  (#tag filters)'}" autocomplete="off" spellcheck="false"><kbd>Esc</kbd></div><div class="pal-res" id="pal-res"></div><div class="pal-foot"><span>${locked ? `${plural(locked, 'locked category', 'locked categories')} not searched` : ''}</span><span>↑ ↓ to move, Enter to open</span></div></div>`;
+  $('#layer').append(el);
+  const q = $('#pal-q', el), res = $('#pal-res', el); let results = [], sel = 0;
+  const close = () => { el.remove(); document.removeEventListener('keydown', onKey, true); };
+  const open = i => {
+    const r = results[i]; if (!r) return; close();
+    if (pick) pick(r.e.n); else location.hash = r.e.n ? `#/c/${r.e.c.id}/${r.e.n.id}` : `#/c/${r.e.c.id}`;
+  };
+  const draw = () => {
+    const terms = q.value.toLowerCase().split(/\s+/).filter(Boolean);
+    const tagT = terms.filter(t => t.startsWith('#') && t.length > 1).map(t => t.slice(1)), words = terms.filter(t => !t.startsWith('#'));
+    if (!terms.length) {
+      results = LS.get('recent', []).map(x => { const c = catById(x.c), f = c && findNode(c, x.n); return f ? { e: { kind: 'file', c, n: f.node, ps: f.parents, name: f.node.name, tags: f.node.tags, text: '' } } : null; }).filter(Boolean).slice(0, 8);
+    } else {
+      results = idx.filter(e => !pick || e.kind === 'file').map(e => {
+        if (tagT.length && !tagT.every(t => e.tags.some(x => x.startsWith(t)))) return null;
+        const nm = e.name.toLowerCase(), tx = e.text.toLowerCase(); let score = tagT.length ? 4 : 0;
+        for (const w of words) {
+          if (nm === w) score += 30; else if (nm.startsWith(w)) score += 18; else if (nm.includes(w)) score += 12;
+          else if (e.tags.some(t => t.includes(w))) score += 8; else if (tx.includes(w)) score += 2; else return null;
+        }
+        return { e, score, words };
+      }).filter(Boolean).sort((a, b) => b.score - a.score).slice(0, 50);
+    }
+    sel = 0;
+    res.innerHTML = results.length ? (!terms.length ? '<div class="pi-path" style="padding:6px 11px">Recently viewed</div>' : '') + results.map((r, i) => {
+      const e = r.e, w = r.words || [];
+      const sn = w.length && e.text ? snippet(e.text, w.filter(x => !e.name.toLowerCase().includes(x)).length ? w : []) : '';
+      return `<div class="pal-item ${i === 0 ? 'sel' : ''}" data-i="${i}">${ic(e.kind === 'cat' ? 'box' : e.kind === 'folder' ? 'folder' : 'file')}<div class="pi-b"><div class="pi-name">${markName(e.name, w)}</div><div class="pi-path">${e.kind === 'cat' ? 'Category' : esc(pathOf(e.c, e.ps))}${e.tags.length ? '  ' + e.tags.slice(0, 4).map(t => '#' + esc(t)).join(' ') : ''}</div>${sn ? `<div class="pi-snip">${sn}</div>` : ''}</div></div>`;
+    }).join('') : `<div class="pal-empty">${terms.length ? 'No matches.' : 'Type to search.'}</div>`;
+  };
+  const move = d => { const items = $$('.pal-item', res); if (!items.length) return; sel = (sel + d + items.length) % items.length; items.forEach((x, i) => x.classList.toggle('sel', i === sel)); items[sel].scrollIntoView({ block: 'nearest' }); };
+  const onKey = e => {
+    if (e.key === 'Escape') { e.preventDefault(); e.stopPropagation(); close(); }
+    else if (e.key === 'ArrowDown') { e.preventDefault(); move(1); }
+    else if (e.key === 'ArrowUp') { e.preventDefault(); move(-1); }
+    else if (e.key === 'Enter') { e.preventDefault(); open(sel); }
+  };
+  document.addEventListener('keydown', onKey, true);
+  q.addEventListener('input', draw);
+  res.addEventListener('click', e => { const it = e.target.closest('.pal-item'); if (it) open(+it.dataset.i); });
+  res.addEventListener('mousemove', e => { const it = e.target.closest('.pal-item'); if (it && +it.dataset.i !== sel) { sel = +it.dataset.i; $$('.pal-item', res).forEach((x, i) => x.classList.toggle('sel', i === sel)); } });
+  el.addEventListener('mousedown', e => { if (e.target === el) close(); });
+  draw(); q.focus();
+}
+
+/* ---------- modal / menu / toast ---------- */
+function modal(o) {
+  return new Promise(res => {
+    const el = document.createElement('div'); el.className = 'modal-bg';
+    el.innerHTML = `<form class="modal ${o.wide ? 'wide' : ''}" novalidate role="dialog" aria-modal="true"><h2>${esc(o.title)}</h2><div class="m-body">${o.body || ''}</div><p class="m-err" hidden></p><div class="m-acts">${o.cancel !== false ? `<button type="button" class="btn" data-m="cancel">${esc(o.cancel || 'Cancel')}</button>` : ''}${o.alt ? `<button type="button" class="btn" data-m="alt">${esc(o.alt)}</button>` : ''}<button type="submit" class="btn ${o.danger ? 'danger-solid' : 'primary'}">${esc(o.ok || 'OK')}</button></div></form>`;
+    $('#layer').append(el);
+    const form = $('form', el), err = $('.m-err', form), submit = $('button[type=submit]', form);
+    let closed = false;
+    const done = v => { if (closed) return; closed = true; el.remove(); document.removeEventListener('keydown', onKey, true); res(v); };
+    const onKey = e => { if (e.key === 'Escape' && $('#layer').lastElementChild === el) { e.stopPropagation(); done(null); } };
+    document.addEventListener('keydown', onKey, true);
+    el.addEventListener('mousedown', e => { if (e.target === el) done(null); });
+    $('[data-m="cancel"]', el)?.addEventListener('click', () => done(null));
+    $('[data-m="alt"]', el)?.addEventListener('click', () => done({ _alt: true }));
+    form.addEventListener('submit', async e => {
+      e.preventDefault();
+      if (e.target !== form) return;
+      const v = Object.fromEntries(new FormData(form));
+      if (o.validate) {
+        submit.disabled = true;
+        const m = await o.validate(v);
+        submit.disabled = false;
+        if (m) { err.textContent = m; err.hidden = false; return; }
+      }
+      done(v);
+    });
+    o.onOpen?.(el, done);
+    setTimeout(() => ($('[autofocus]', form) || $('input:not([type=checkbox]):not([type=file]),textarea,select', form) || submit)?.focus(), 20);
+  });
+}
+const confirmDlg = async (title, msg, ok = 'OK', danger = false) => !!(await modal({ title, body: `<p>${esc(msg)}</p>`, ok, danger }));
+function openMenu(anchor, items) {
+  closeMenu();
+  const m = document.createElement('div'); m.className = 'menu'; m.setAttribute('role', 'menu');
+  m.innerHTML = items.map((it, i) => it === '-' ? '<hr>' : `<button role="menuitem" data-i="${i}" class="${it.danger ? 'danger' : ''}">${ic(it.icon || 'dot')}<span>${esc(it.label)}</span></button>`).join('');
+  $('#layer').append(m);
+  const r = anchor.getBoundingClientRect();
+  let top = r.bottom + 4, left = Math.min(r.left, innerWidth - m.offsetWidth - 8);
+  if (top + m.offsetHeight > innerHeight - 8) top = Math.max(8, r.top - m.offsetHeight - 4);
+  m.style.top = top + 'px'; m.style.left = Math.max(8, left) + 'px';
+  m.addEventListener('click', e => { const b = e.target.closest('button[data-i]'); if (b) { closeMenu(); items[+b.dataset.i].run(); } });
+  S.menu = m;
+  setTimeout(() => document.addEventListener('mousedown', menuOutside, true), 0);
+  m.querySelector('button')?.focus();
+}
+function menuOutside(e) { if (S.menu && !S.menu.contains(e.target)) closeMenu(); }
+function closeMenu() { S.menu?.remove(); S.menu = null; document.removeEventListener('mousedown', menuOutside, true); }
+function toast(msg, kind) {
+  const t = document.createElement('div'); t.className = 'toast ' + (kind || ''); t.textContent = msg;
+  $('#toasts').append(t); setTimeout(() => t.remove(), kind === 'err' ? 5200 : 2000);
+}
+async function copyText(text) {
+  try { await navigator.clipboard.writeText(text); return true; }
+  catch { const ta = document.createElement('textarea'); ta.value = text; ta.style.position = 'fixed'; ta.style.opacity = '0'; document.body.append(ta); ta.select(); let ok = false; try { ok = document.execCommand('copy'); } catch { } ta.remove(); return ok; }
+}
+
+/* ---------- settings, import/export ---------- */
+async function exportData() {
+  const cats = []; for (const c of S.cats) cats.push(await serializeCat(c));
+  const blob = new Blob([JSON.stringify({ format: 'kb-export', v: 1, exported: new Date().toISOString(), cats }, null, 2)], { type: 'application/json' });
+  const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = `knowledge-base-${new Date().toISOString().slice(0, 10)}.json`;
+  document.body.append(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(a.href), 2000);
+}
+async function importData(file) {
+  try {
+    const obj = JSON.parse(await file.text());
+    const list = obj.format === 'kb-export' ? obj.cats : obj.format === 'kb-cat' ? [obj] : null;
+    if (!list) throw new Error('This isn’t a knowledge base export.');
+    let added = 0;
+    for (const o of list) {
+      const c = parseCat(o), ex = catById(c.id);
+      if (ex) { if (!await confirmDlg(`Replace “${ex.name}”?`, 'A category with the same ID already exists. Replacing it overwrites its current contents (the old version stays in history if synced).', 'Replace', true)) continue; S.cats[S.cats.indexOf(ex)] = c; }
+      else S.cats.push(c);
+      touch(c, `Import “${c.name}”`); added++;
+    }
+    toast(`Imported ${plural(added, 'category', 'categories')}`); render();
+  } catch (e) { toast('Import failed: ' + e.message, 'err'); }
+}
+function openSettings() {
+  const cfg = S.cfg, remember = !!(() => { try { return localStorage.getItem('kb.token'); } catch { return null; } })() || !S.token;
+  modal({
+    title: 'Settings', ok: S.token ? 'Save and reconnect' : 'Connect GitHub', cancel: 'Close',
+    body: `<p>${S.mode === 'github' ? `Connected to <b>${esc(cfg.owner)}/${esc(cfg.repo)}</b> on branch <b>${esc(cfg.branch)}</b>.` : S.mode === 'readonly' ? 'Viewing read-only. Add a token to edit.' : 'Data is stored only in this browser.'}</p>
+      <div class="m-sub">GitHub repository</div>
+      <div class="grid2"><label class="f">Owner<input class="in" name="owner" value="${esc(cfg.owner)}" placeholder="your-username" autocomplete="off"></label><label class="f">Repository<input class="in" name="repo" value="${esc(cfg.repo)}" placeholder="my-notes" autocomplete="off"></label><label class="f">Branch<input class="in" name="branch" value="${esc(cfg.branch || 'main')}" autocomplete="off"></label><label class="f">Data folder<input class="in" name="path" value="${esc(cfg.path || 'kb')}" autocomplete="off"></label></div>
+      <label class="f">Personal access token<input class="in" type="password" name="token" placeholder="${S.token ? 'Saved. Leave empty to keep it.' : 'github_pat_…'}" autocomplete="off"></label>
+      <label class="chk"><input type="checkbox" name="remember" ${remember ? 'checked' : ''}> Remember the token on this device</label>
+      <details class="help"><summary>How to create the token</summary><ol><li>Open <a href="https://github.com/settings/personal-access-tokens/new" target="_blank" rel="noopener noreferrer">GitHub fine-grained tokens</a>.</li><li>Repository access: <b>Only select repositories</b>, and pick this site’s repository.</li><li>Repository permissions: <b>Contents: Read and write</b>. Nothing else is needed.</li><li>Set an expiry, generate, and paste it here. Add it once on each device you use.</li></ol><p class="note">The token is stored in this browser’s storage. Don’t use it on shared computers, and revoke it on GitHub if a device is lost.</p></details>
+      <div class="m-sub">Backup</div>
+      <div class="row-btns"><button type="button" class="btn sm" id="s-export">${ic('download')}Export JSON</button><label class="btn sm">${ic('upload')}Import JSON<input type="file" accept=".json,application/json" id="s-import" hidden></label>${S.token ? `<button type="button" class="btn sm danger" id="s-disconnect">Disconnect from GitHub</button>` : ''}</div>
+      <p class="note">Exports include unlocked categories in plain text and locked ones encrypted.</p>`,
+    onOpen: (el, done) => {
+      $('#s-export', el).addEventListener('click', exportData);
+      $('#s-import', el).addEventListener('change', e => { const f = e.target.files[0]; if (f) { done(null); importData(f); } });
+      $('#s-disconnect', el)?.addEventListener('click', async () => {
+        done(null);
+        if (S.cats.some(c => c.dirty) && !await confirmDlg('Disconnect with unsaved changes?', 'Some changes haven’t reached GitHub yet. They stay in this browser.', 'Disconnect', true)) return;
+        saveToken(''); S.token = ''; S.mode = 'local'; S.cats.forEach(c => c.dirty = true); persist(); setStatus(); render(); toast('Disconnected');
+      });
+    },
+    validate: async v => {
+      const next = { owner: v.owner.trim(), repo: v.repo.trim(), branch: v.branch.trim() || 'main', path: (v.path.trim() || 'kb').replace(/^\/+|\/+$/g, '') };
+      const token = v.token.trim() || S.token;
+      if (!next.owner || !next.repo) return 'Enter the repository owner and name.';
+      if (!token) return 'Paste a personal access token.';
+      if (!/^[\w.\-/]+$/.test(next.branch) || !/^[\w.\-/]+$/.test(next.path)) return 'Branch and folder can only contain letters, numbers, - _ . and /.';
+      const prev = { cfg: S.cfg, token: S.token };
+      S.cfg = next; S.token = token;
+      try {
+        const repo = await GH.req('GET', '');
+        if (repo.permissions && !repo.permissions.push) throw new Error('The token can read but not write this repository. Give it Contents: Read and write.');
+        await GH.head();
+      } catch (e) {
+        S.cfg = prev.cfg; S.token = prev.token;
+        return e.status === 401 ? 'GitHub rejected the token.' : e.status === 404 ? 'Repository or branch not found, or the token has no access to it.' : e.message;
+      }
+      LS.set('settings', next); saveToken(token, !!v.remember);
+      S.mode = 'github'; S.loaded = false; render();
+      try { await loadGithub(); S.loaded = true; render(); toast('Connected to GitHub'); }
+      catch (e) { S.loaded = true; setStatus('error', e.message); render(); return 'Loading failed: ' + e.message; }
+      return null;
+    }
+  });
+}
+
+/* ---------- actions (click delegation) ---------- */
+const ctxCat = el => catById(el.dataset.cat || S.route.catId);
+const ACT = {
+  'open-sidebar': () => document.body.classList.add('sb-open'),
+  'close-sidebar': () => document.body.classList.remove('sb-open'),
+  search: () => openSearch(),
+  settings: () => openSettings(),
+  theme: () => { const t = document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark'; document.documentElement.dataset.theme = t; LS.set('theme', t); renderTop(); },
+  status: () => { if (S.mode === 'github') { if (S.status === 'synced') toast('Everything is saved to GitHub'); else { S.retries = 0; push(); } } else openSettings(); },
+  'new-cat': () => newCategory(),
+  'cat-menu': el => { const c = ctxCat(el); if (c) catMenu(el, c); },
+  'node-menu': el => { const c = ctxCat(el); if (c) nodeMenu(el, c, el.dataset.id); },
+  toggle: el => { const id = el.dataset.id; S.expanded.has(id) ? S.expanded.delete(id) : S.expanded.add(id); saveExpanded(); renderSidebar(); },
+  'new-file': el => { const c = ctxCat(el); if (c) createNode(c, el.dataset.parent, 'file'); },
+  'new-folder': el => { const c = ctxCat(el); if (c) createNode(c, el.dataset.parent, 'folder'); },
+  'lock-now': el => { const c = ctxCat(el); if (c) lockNow(c); },
+  fav: () => { const x = routeFile(); if (x) { x.f.fav = !x.f.fav; touch(x.c); renderMain(); } },
+  history: () => { const c = catById(S.route.catId); if (c) openHistory(c); },
+  edit: () => startEdit(),
+  'edit-done': () => finishEdit(true),
+  'edit-cancel': async () => {
+    const ed = S.editing, x = editCtx();
+    if (x && JSON.stringify(x.f) !== JSON.stringify(ed.snap) && !await confirmDlg('Discard your changes?', 'Everything you changed since you started editing will be lost.', 'Discard', true)) return;
+    finishEdit(false);
+  },
+  'add-box': el => { const x = editCtx(); if (!x) return; const b = newBox(el.dataset.kind); x.f.boxes.push(b); markEdit(); renderMain(); const nb = $(`.box[data-box-id="${b.id}"]`); nb?.scrollIntoView({ block: 'center', behavior: 'smooth' }); $('.box-title', nb)?.select(); },
+  'box-del': async el => { const x = editCtx(); if (!x) return; const b = boxOf(el, x.f); if (!isEmptyBox(b) && !await confirmDlg(`Remove “${b.title || BOX_DEFAULT_TITLE[b.kind]}”?`, 'The box and its contents are removed from this file.', 'Remove', true)) return; x.f.boxes.splice(x.f.boxes.indexOf(b), 1); markEdit(); renderMain(); },
+  'box-width': el => { const x = editCtx(); if (!x) return; const b = boxOf(el, x.f); b.width = b.width === 'full' ? 'half' : 'full'; markEdit(); renderMain(); },
+  'add-line': el => { const x = editCtx(); if (!x) return; const b = boxOf(el, x.f); const l = { id: uid(), code: '', comment: '' }; b.lines.push(l); markEdit(); rerenderLines(b); focusLine(l.id); },
+  'line-del': el => { const x = editCtx(); if (!x) return; const b = boxOf(el, x.f); const i = b.lines.indexOf(lineOf(el, b)); b.lines.splice(i, 1); if (!b.lines.length) b.lines.push({ id: uid(), code: '', comment: '' }); markEdit(); rerenderLines(b); },
+  'ref-add': el => { const x = editCtx(); if (!x) return; const b = boxOf(el, x.f); const it = { id: uid(), title: '', url: '', note: '' }; b.items.push(it); markEdit(); renderMain(); $(`[data-item-id="${it.id}"] input`)?.focus(); },
+  'ref-del': el => { const x = editCtx(); if (!x) return; const b = boxOf(el, x.f); b.items.splice(b.items.indexOf(itemOf(el, b)), 1); markEdit(); renderMain(); },
+  'img-remove': el => { const x = editCtx(); if (!x) return; const b = boxOf(el, x.f); b.src = ''; b.caption = ''; markEdit(); renderMain(); },
+  'tag-del': el => { const x = editCtx(); if (!x) return; x.f.tags = x.f.tags.filter(t => t !== el.dataset.tag); markEdit(); $('#tags-ed').innerHTML = tagsEditor(x.f); $('.tag-in')?.focus(); },
+  md: el => {
+    const ta = el.closest('.box').querySelector('textarea'), kind = el.dataset.md, s = ta.selectionStart, e = ta.selectionEnd, sel = ta.value.slice(s, e);
+    const fire = () => ta.dispatchEvent(new Event('input', { bubbles: true }));
+    if (kind === 'link') { openSearch(n => { ta.focus(); ta.setRangeText(`[[${n.name}]]`, s, e, 'end'); fire(); }); return; }
+    ta.focus();
+    if (kind === 'list') { const ls = ta.value.lastIndexOf('\n', s - 1) + 1; const block = ta.value.slice(ls, e); ta.setRangeText(block.split('\n').map(l => l.startsWith('- ') ? l : '- ' + l).join('\n'), ls, e, 'end'); }
+    else { const m = kind === 'bold' ? '**' : kind === 'italic' ? '_' : '`'; ta.setRangeText(m + sel + m, s, e, 'select'); if (!sel) ta.setSelectionRange(s + m.length, s + m.length); }
+    fire();
+  },
+  'copy-line': async el => {
+    if (String(window.getSelection())) return;
+    if (await copyText(el.dataset.copy)) { el.classList.add('copied'); const ico = $('.copy', el); if (ico) ico.innerHTML = ic('check'); setTimeout(() => { el.classList.remove('copied'); if (ico) ico.innerHTML = ic('copy'); }, 1000); toast('Copied'); }
+    else toast('Copy failed. Your browser blocked clipboard access.', 'err');
+  },
+  zoom: el => { const lb = document.createElement('div'); lb.className = 'lightbox'; lb.innerHTML = `<img src="${esc(el.src)}" alt="">`; lb.addEventListener('click', () => lb.remove()); document.body.append(lb); },
+  'var-add': async () => {
+    const c = catById(S.route.catId); if (!c) return;
+    const v = await modal({ title: 'Add a variable', ok: 'Add', body: `<input class="in" name="name" placeholder="e.g. LHOST, PORT, DOMAIN" autofocus style="font-family:var(--mono);text-transform:uppercase" aria-label="Variable name"><p class="note">Every place this word appears in this category’s code is replaced with the value you type in the top bar. Use capital letters, digits and underscores.</p>`, validate: v => /^[A-Za-z_][A-Za-z0-9_]{0,23}$/.test(v.name.trim()) ? (getVars(c.id).some(x => x.name === v.name.trim().toUpperCase()) ? 'That variable already exists.' : null) : 'Use letters, digits and underscores, starting with a letter.' });
+    if (!v) return; const vars = getVars(c.id); vars.push({ name: v.name.trim().toUpperCase(), value: '' }); setVars(c.id, vars); renderTop(); refreshCode();
+  },
+  'var-del': el => { const c = catById(S.route.catId); if (!c) return; const vars = getVars(c.id); vars.splice(+el.dataset.i, 1); setVars(c.id, vars); renderTop(); refreshCode(); }
+};
+function refreshCode() {
+  if (S.editing) return; const x = routeFile(); if (!x) return;
+  x.f.boxes.filter(b => b.kind === 'code').forEach(b => { const el = $(`.box[data-box-id="${b.id}"] .code-lines`); if (el) el.innerHTML = codeLinesHtml(x.c, b); });
+}
+const refreshCodeSoon = debounce(refreshCode, 120);
+
+/* ---------- global events ---------- */
+document.addEventListener('click', e => {
+  const a = e.target.closest('[data-act]'); if (!a || a.closest('.modal')) return;
+  const fn = ACT[a.dataset.act]; if (!fn) return;
+  e.preventDefault(); fn(a, e);
+});
+document.addEventListener('submit', async e => {
+  if (e.target.id !== 'unlock-form') return;
+  e.preventDefault();
+  const form = e.target, c = catById(form.dataset.cat), err = $('#unlock-err'), btn = $('button', form);
+  if (!c) return;
+  btn.disabled = true; btn.textContent = 'Unlocking…';
+  try { await unlock(c, form.pin.value); S.unlockFails = 0; render(); }
+  catch { S.unlockFails = (S.unlockFails || 0) + 1; await sleep(Math.min(4000, 400 * S.unlockFails)); err.textContent = 'Wrong PIN.'; err.hidden = false; btn.disabled = false; btn.textContent = 'Unlock'; form.pin.select(); }
+});
+document.addEventListener('input', e => {
+  const t = e.target;
+  if (t.matches('[data-var]')) { const c = catById(S.route.catId); if (!c) return; const vars = getVars(c.id); if (vars[+t.dataset.var]) { vars[+t.dataset.var].value = t.value; setVars(c.id, vars); refreshCodeSoon(); } return; }
+  if (!S.editing || !t.dataset.f) return;
+  const x = editCtx(); if (!x) return; const f = x.f, b = boxOf(t, f);
+  switch (t.dataset.f) {
+    case 'name': f.name = t.value; break;
+    case 'box-title': b.title = t.value; break;
+    case 'content': b.content = t.value; break;
+    case 'line-code': lineOf(t, b).code = t.value; break;
+    case 'line-comment': lineOf(t, b).comment = t.value; break;
+    case 'caption': b.caption = t.value; break;
+    case 'ref-title': itemOf(t, b).title = t.value; break;
+    case 'ref-url': itemOf(t, b).url = t.value; break;
+    case 'ref-note': itemOf(t, b).note = t.value; break;
+    default: return;
+  }
+  if (t.hasAttribute('data-grow')) grow(t);
+  markEdit();
+});
+document.addEventListener('change', e => {
+  const t = e.target; if (!S.editing) return;
+  const x = editCtx(); if (!x) return;
+  if (t.dataset.f === 'lang') { boxOf(t, x.f).lang = t.value; markEdit(); }
+  if (t.dataset.f === 'image' && t.files?.[0]) setImage(boxOf(t, x.f), t.files[0]);
+});
+document.addEventListener('keydown', e => {
+  S.lastActivity = Date.now();
+  const t = e.target, mod = e.ctrlKey || e.metaKey;
+  if (mod && e.key.toLowerCase() === 'k') { e.preventDefault(); openSearch(); return; }
+  if (mod && e.key.toLowerCase() === 's') { e.preventDefault(); if (S.editing) finishEdit(true); else if (S.mode === 'github') push(); return; }
+  if (S.editing && t.matches?.('.code-in')) {
+    const x = editCtx(), b = boxOf(t, x.f), line = lineOf(t, b), i = b.lines.indexOf(line);
+    if (e.key === 'Enter' && !e.shiftKey && !e.isComposing) {
+      e.preventDefault();
+      const after = t.value.slice(t.selectionEnd); line.code = t.value.slice(0, t.selectionStart);
+      const nl = { id: uid(), code: after, comment: '' }; b.lines.splice(i + 1, 0, nl);
+      markEdit(); rerenderLines(b); focusLine(nl.id, 0);
+    } else if (e.key === 'Backspace' && t.selectionStart === 0 && t.selectionEnd === 0 && i > 0) {
+      e.preventDefault();
+      const prev = b.lines[i - 1], pos = prev.code.length;
+      prev.code += line.code; if (!prev.comment) prev.comment = line.comment;
+      b.lines.splice(i, 1); markEdit(); rerenderLines(b); focusLine(prev.id, pos);
+    } else if (e.key === 'ArrowUp' && i > 0 && !t.value.slice(0, t.selectionStart).includes('\n')) { e.preventDefault(); focusLine(b.lines[i - 1].id); }
+    else if (e.key === 'ArrowDown' && i < b.lines.length - 1 && !t.value.slice(t.selectionEnd).includes('\n')) { e.preventDefault(); focusLine(b.lines[i + 1].id); }
+    return;
+  }
+  if (S.editing && t.matches?.('.tag-in')) {
+    const x = editCtx();
+    if ((e.key === 'Enter' || e.key === ',') && t.value.trim()) {
+      e.preventDefault();
+      const tag = normTag(t.value); if (tag && !x.f.tags.includes(tag)) { x.f.tags.push(tag); markEdit(); }
+      $('#tags-ed').innerHTML = tagsEditor(x.f); $('.tag-in').focus();
+    } else if (e.key === 'Backspace' && !t.value && x.f.tags.length) { x.f.tags.pop(); markEdit(); $('#tags-ed').innerHTML = tagsEditor(x.f); $('.tag-in').focus(); }
+    else if (e.key === 'Enter') e.preventDefault();
+    return;
+  }
+  const typing = /^(INPUT|TEXTAREA|SELECT)$/.test(document.activeElement?.tagName) || document.activeElement?.isContentEditable;
+  if (typing || $('.modal-bg') || S.menu) { if (e.key === 'Escape') { closeMenu(); $('.lightbox')?.remove(); } return; }
+  if (e.key === 'Escape') { $('.lightbox')?.remove(); document.body.classList.remove('sb-open'); }
+  else if (e.key === '/') { e.preventDefault(); openSearch(); }
+  else if (e.key === 'e' && !mod && !S.editing && routeFile() && canEdit()) { e.preventDefault(); startEdit(); }
+});
+document.addEventListener('paste', e => {
+  if (!S.editing) return;
+  const x = editCtx(); if (!x) return;
+  const img = [...(e.clipboardData?.items || [])].find(i => i.type.startsWith('image/'));
+  if (img) {
+    e.preventDefault();
+    const near = e.target.closest?.('.box.k-image') && boxOf(e.target, x.f);
+    let b = near || x.f.boxes.find(bb => bb.kind === 'image' && !bb.src);
+    if (!b) { b = newBox('image'); x.f.boxes.push(b); }
+    setImage(b, img.getAsFile()); return;
+  }
+  const t = e.target;
+  if (t.matches?.('.code-in')) {
+    const txt = e.clipboardData.getData('text/plain');
+    if (!txt.includes('\n')) return;
+    e.preventDefault();
+    const b = boxOf(t, x.f), line = lineOf(t, b), i = b.lines.indexOf(line);
+    const parts = txt.replace(/\r\n?/g, '\n').replace(/\n+$/, '').split('\n');
+    const before = t.value.slice(0, t.selectionStart), after = t.value.slice(t.selectionEnd);
+    line.code = before + parts[0];
+    const added = parts.slice(1).map(p => ({ id: uid(), code: p, comment: '' }));
+    if (added.length) added[added.length - 1].code += after; else line.code += after;
+    b.lines.splice(i + 1, 0, ...added);
+    markEdit(); rerenderLines(b);
+    const last = added[added.length - 1] || line; focusLine(last.id, last.code.length - after.length);
+  }
+});
+document.addEventListener('dragover', e => {
+  if (!S.editing || !e.dataTransfer?.types?.includes('Files')) return;
+  e.preventDefault(); $$('.drop').forEach(d => d.classList.toggle('over', d.contains(e.target)));
+});
+document.addEventListener('drop', e => {
+  if (!S.editing || !e.dataTransfer?.files?.length) return;
+  e.preventDefault(); $$('.drop').forEach(d => d.classList.remove('over'));
+  const x = editCtx(), zone = e.target.closest?.('.box.k-image');
+  if (!x || !zone) { toast('Drop images onto an image box.'); return; }
+  setImage(boxOf(zone, x.f), e.dataTransfer.files[0]);
+});
+['pointerdown', 'touchstart', 'scroll'].forEach(ev => addEventListener(ev, () => { S.lastActivity = Date.now(); }, { passive: true }));
+setInterval(() => {
+  if (Date.now() - S.lastActivity > AUTOLOCK_MS && !S.editing) {
+    const open = S.cats.filter(c => c.locked && c.data);
+    if (open.length) { open.forEach(lockNow); toast('Locked categories were locked again after 15 minutes of inactivity'); }
+  }
+}, 30000);
+addEventListener('hashchange', onRoute);
+addEventListener('beforeunload', e => { if (S.mode === 'github' && (S.cats.some(c => c.dirty) || S.deleted.size || S.pushing)) { e.preventDefault(); e.returnValue = ''; } });
+document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'hidden' && S.mode === 'github' && !S.editing && S.cats.some(c => c.dirty)) push(); });
+
+/* ---------- boot ---------- */
+async function init() {
+  S.route = parseRoute();
+  render();
+  if (S.token && S.cfg.owner && S.cfg.repo) {
+    S.mode = 'github';
+    try { await loadGithub(); }
+    catch (e) {
+      console.error(e);
+      const cache = await IDB.get('cache');
+      if (cache && cache.repo === repoKey()) {
+        S.cats = (cache.cats || []).map(o => { try { const c = parseCat(o); c.dirty = !!o._dirty; return c; } catch { return null; } }).filter(Boolean);
+        S.base = cache.base; S.shas = cache.shas || {}; S.deleted = new Set(cache.deleted || []);
+      }
+      setStatus('error', e.message);
+      toast(e.status === 401 ? 'GitHub rejected the saved token. Update it in Settings.' : 'Couldn’t reach GitHub. Showing the copy saved on this device.', 'err');
+    }
+  } else {
+    let ok = false;
+    if (/^https?:$/.test(location.protocol)) { try { S.cats = await loadStatic(); S.mode = 'readonly'; ok = true; } catch { } }
+    if (!ok) {
+      S.mode = 'local';
+      const cache = await IDB.get('cache');
+      if (cache?.cats) S.cats = cache.cats.map(o => { try { const c = parseCat(o); c.dirty = true; return c; } catch { return null; } }).filter(Boolean);
+    }
+  }
+  S.loaded = true; setStatus(); onRoute();
+}
+init();
+</script>
+</body>
+</html>
