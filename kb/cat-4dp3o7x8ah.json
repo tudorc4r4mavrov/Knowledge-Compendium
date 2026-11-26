@@ -5,8 +5,56 @@
   "name": "Web Apps",
   "order": 1,
   "locked": false,
-  "updated": 1795703879599,
+  "updated": 1795703890988,
   "data": {
-    "children": []
+    "children": [
+      {
+        "id": "klgd5y62ek",
+        "type": "file",
+        "name": "Dev Tools",
+        "tags": [],
+        "fav": false,
+        "created": 1795703890987,
+        "updated": 1795703894181,
+        "boxes": [
+          {
+            "id": "l2erftfa0d",
+            "kind": "text",
+            "title": "What is it?",
+            "width": "half",
+            "content": ""
+          },
+          {
+            "id": "mjc1zrnvhg",
+            "kind": "text",
+            "title": "Types",
+            "width": "half",
+            "content": ""
+          },
+          {
+            "id": "ceb0w0pp3h",
+            "kind": "code",
+            "title": "Code",
+            "width": "full",
+            "lang": "bash",
+            "lines": [
+              {
+                "id": "pvjzoajjd2",
+                "code": "",
+                "comment": ""
+              }
+            ]
+          },
+          {
+            "id": "70258gkay8",
+            "kind": "image",
+            "title": "Image",
+            "width": "half",
+            "src": "",
+            "caption": ""
+          }
+        ]
+      }
+    ]
   }
 }
